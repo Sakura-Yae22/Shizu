@@ -3,7 +3,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from '../../struct/Command';
 import { Message, MessageEmbed, DMChannel, MessageActionRow, MessageButton, MessageComponentInteraction, GuildChannel, Snowflake } from 'discord.js';
-import { ChannelTypes } from 'discord.js/typings/enums';
 
 abstract class ChannelCommand extends Command {
     constructor() {
@@ -141,7 +140,7 @@ abstract class ChannelCommand extends Command {
                         if (hello.customId === 'yesc') {
                             if (message.channel instanceof DMChannel) return
                             await message.guild?.channels.create(`${args[1]}`, {
-                                type: ChannelTypes.GUILD_TEXT,
+                                type: 'GUILD_TEXT',
                                 parent: message.channel.parentId ? message.channel.parentId : undefined
                             })
                             const done = new MessageEmbed()
