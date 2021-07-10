@@ -1,0 +1,9 @@
+# Packages
+node_modules
+
+# Dist
+dist/
+
+.env
+
+yarn.lock
