@@ -11,7 +11,7 @@ import t from '../../struct/text';
 import * as _ from 'lodash'
 import Paginate from 'discordjs-paginate';
 
-const watch = t(`${process.cwd()}/assets/Watch.graphql`, require);
+const watch = t(`${process.cwd()}/assets/Watching.graphql`, require);
 
 
 abstract class WatchingCommand extends Command {
