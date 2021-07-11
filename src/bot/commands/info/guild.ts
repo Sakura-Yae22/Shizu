@@ -5,7 +5,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from '../../struct/Command';
 import { Message, MessageEmbed } from 'discord.js';
-import moment from 'moment';
 import Paginate from 'discordjs-paginate';
 
 
@@ -88,7 +87,7 @@ abstract class ServerCommand extends Command {
 												**❯ Boost Tier:** ${message.guild.premiumTier ? `Tier ${message.guild.premiumTier}` : 'None'}
 												**❯ Explicit Filter:** ${filterLevels[message.guild.explicitContentFilter]}
 												**❯ Verification Level:** ${verificationLevels[message.guild.verificationLevel]}
-												**❯ Time Created:** ${moment(message.guild.createdTimestamp).format('LT')} ${moment(message.guild.createdTimestamp).format('LL')} ${moment(message.guild.createdTimestamp).fromNow()}
+												**❯ Time Created:** <t:${message.guild.createdTimestamp}>
 											`))
 					.setTimestamp();
 				const embed2 = new MessageEmbed()

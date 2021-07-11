@@ -7,7 +7,6 @@
 
 import Command from '../../struct/Command';
 import { Message, MessageEmbed, version as djsversion } from 'discord.js';
-import { utc } from 'moment';
 import os from 'os';
 const { version } = require(`${process.cwd()}/package.json`)
 import Paginate from 'discordjs-paginate';
@@ -41,7 +40,7 @@ abstract class BotInfoCommand extends Command {
 										** Servers Cached:** ${this.client.guilds.cache.size},
 										** Users Cached:** ${this.client.users.cache.size},
 										** Channels Cached:** ${this.client.channels.cache.size},
-										** BirthDay: ** ${utc(this.client.user?.createdTimestamp).format('Do MMMM YYYY HH:mm:ss')},
+										** BirthDay: ** <t:${this.client.user?.createdTimestamp}>,
 										** Node.js:** ${process.version},
 										** Bot Version:** v${version},
 										** Discord.js:** v${djsversion},

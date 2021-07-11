@@ -13,7 +13,7 @@ async function modadd(member: GuildMember, webhook: Webhook): Promise<(Message |
             dynamic: true
         }))
         .setAuthor(`${member.user.tag}`)
-        .addField(`Account Age`, `${utc(member.joinedTimestamp).format('Do MMMM YYYY')}`, true)
+        .addField(`Account Age`, `<t:${member.joinedTimestamp}>`, true)
         .addField(`Bot`, `${member.user.bot}`, true)
         .setFooter(`ID: ${member.user.id}`)
         .setTimestamp();
@@ -38,7 +38,7 @@ async function modmsgedit(oldmsg: Message, newmsg: Message, webhook: Webhook): P
         .setAuthor(`${oldmsg.author.tag}`, 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png', `https://discord.com/channels/${oldmsg.guild?.id}/${oldmsg.channel.id}/${oldmsg.id}`)
         .setDescription(oldmsg.content)
         .addField('Channel', `${oldmsg.channel}`, true)
-        .addField(`Message Created Timestamp`, ` ${utc(oldmsg.createdTimestamp).format('Do MMMM YYYY HH:mm:ss')}`, true)
+        .addField(`Message Created Timestamp`, `<t:${oldmsg.createdTimestamp}>`, true)
         .setURL(`https://discord.com/channels/${oldmsg.guild?.id}/${oldmsg.channel.id}/${oldmsg.id}`)
     const msgedited2 = new MessageEmbed()
         .setColor('GREEN')
@@ -69,7 +69,7 @@ async function modmsgdel(message: Message, webhook: Webhook): Promise<(Message |
             dynamic: true
         }) : 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png')
         .setAuthor(`${message.author ? message.author.tag : `Not Cached`}`)
-        .addField(`Message Timestamp`, `${utc(message.createdTimestamp).format('Do MMMM YYYY HH:mm:ss')}`, true)
+        .addField(`Message Timestamp`, `<t:${message.createdTimestamp}>`, true)
         .addField(`Bot`, `${message.author ? message.author.bot : 'Not Cached'}`, true)
         .addField(`Channel`, `${message.channel}`, true)
         .setFooter(`ID: ${message.author ? message.author.id : 'Not Cached'} | Message ID: ${message.id} | Message Deleted`)
