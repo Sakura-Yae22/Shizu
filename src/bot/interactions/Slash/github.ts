@@ -3,7 +3,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable no-case-declarations */
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 import fetch from 'node-fetch';
 import { utc } from 'moment';
 
@@ -47,9 +47,10 @@ abstract class GithubInteraction extends Interaction {
 					let git: any;
 					git = await fetch(`https://api.github.com/users/${args[1].value}`).then(res => res.json());
 					if (git.message) {
-						return interaction.reply({
+						interaction.reply({
 							content: '<:tick_no:835440115706888195> Sorry!!!!! No results Found'
 						});
+						return
 					}
 					const ghe = new MessageEmbed()
 						.setTitle(git.login)
@@ -73,7 +74,8 @@ abstract class GithubInteraction extends Interaction {
 				case 'repo':
 					const rep: any = await fetch(`https://api.github.com/search/repositories?q=${args[1].value}`).then(res => res.json());
 					if (rep.message) {
-						return interaction.editReply(' <:tick_no:835440115706888195> Sorry!!!!! No results Found');
+						interaction.editReply(' <:tick_no:835440115706888195> Sorry!!!!! No results Found');
+						return
 					}
 					const repo = rep.items[0];
 					const gue = new MessageEmbed()
@@ -90,14 +92,16 @@ abstract class GithubInteraction extends Interaction {
 						.addField('❯ Issues', String(`${repo.open_issues}`), true)
 						.addField('❯ Forks', String(`${repo.forks}`), true)
 						.setAuthor(repo.owner ? repo.owner.login : 'No author', repo.owner ? repo.owner.avatar_url : null, repo.owner ? repo.owner.html_url : 'https://github.com');
-					return interaction.reply({
+					interaction.reply({
 						embeds: [gue]
 					});
+					break;
 			}
 		} catch (e: any) {
-			await interaction.reply({
+			interaction.reply({
 				content: `${e.message}`
 			});
+			return
 		}
 	}
 }

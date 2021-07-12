@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Suggest as schema } from '../mongoose/schemas/suggest';
+import { Suggest as schema } from '../../mongoose/schemas/suggest';
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ColorResolvable, CommandInteraction, GuildMember, MessageEmbed, Snowflake, TextChannel } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 
 const status = {
     WAITING: {

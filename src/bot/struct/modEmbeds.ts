@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/ban-types */
 import { GuildChannel, GuildMember, Invite, Message, MessageEmbed, Webhook } from 'discord.js';
-import { utc } from 'moment';
 
 
 async function modadd(member: GuildMember, webhook: Webhook): Promise<(Message | Object)> {
@@ -13,7 +12,7 @@ async function modadd(member: GuildMember, webhook: Webhook): Promise<(Message |
             dynamic: true
         }))
         .setAuthor(`${member.user.tag}`)
-        .addField(`Account Age`, `<t:${member.joinedTimestamp}>`, true)
+        .addField(`Account Age`, `<t:${Math.floor(member.joinedTimestamp! / 1000)}:f>`, true)
         .addField(`Bot`, `${member.user.bot}`, true)
         .setFooter(`ID: ${member.user.id}`)
         .setTimestamp();
@@ -38,7 +37,7 @@ async function modmsgedit(oldmsg: Message, newmsg: Message, webhook: Webhook): P
         .setAuthor(`${oldmsg.author.tag}`, 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png', `https://discord.com/channels/${oldmsg.guild?.id}/${oldmsg.channel.id}/${oldmsg.id}`)
         .setDescription(oldmsg.content)
         .addField('Channel', `${oldmsg.channel}`, true)
-        .addField(`Message Created Timestamp`, `<t:${oldmsg.createdTimestamp}>`, true)
+        .addField(`Message Created Timestamp`, `<t:${Math.round(oldmsg.createdTimestamp / 1000)}:f>`, true)
         .setURL(`https://discord.com/channels/${oldmsg.guild?.id}/${oldmsg.channel.id}/${oldmsg.id}`)
     const msgedited2 = new MessageEmbed()
         .setColor('GREEN')
@@ -48,7 +47,7 @@ async function modmsgedit(oldmsg: Message, newmsg: Message, webhook: Webhook): P
         .setThumbnail(newmsg.author ? newmsg.author.displayAvatarURL({
             dynamic: true
         }) : 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png')
-        .addField(`Message Edited Timestamp`, `${utc(newmsg.editedTimestamp).format('Do MMMM YYYY HH:mm:ss')}`, true)
+        .addField(`Message Edited Timestamp`, `<t:${Math.round(newmsg.editedTimestamp! / 1000)}:f>`, true)
         .setAuthor(`${newmsg.author ? newmsg.author.tag : 'Not Cached'}`, 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png', `https://discord.com/channels/${newmsg.guild?.id}/${newmsg.channel.id}/${newmsg.id}`)
         .setDescription(newmsg.content)
         .addField('Channel', `${newmsg.channel}`, true)
@@ -69,7 +68,7 @@ async function modmsgdel(message: Message, webhook: Webhook): Promise<(Message |
             dynamic: true
         }) : 'https://cdn.discordapp.com/attachments/815589214057529345/851385503822905354/9ed91074a5368ad9b394081408c3963e.png')
         .setAuthor(`${message.author ? message.author.tag : `Not Cached`}`)
-        .addField(`Message Timestamp`, `<t:${message.createdTimestamp}>`, true)
+        .addField(`Message Timestamp`, `<t:${Math.round(message.createdTimestamp / 1000)}:f>`, true)
         .addField(`Bot`, `${message.author ? message.author.bot : 'Not Cached'}`, true)
         .addField(`Channel`, `${message.channel}`, true)
         .setFooter(`ID: ${message.author ? message.author.id : 'Not Cached'} | Message ID: ${message.id} | Message Deleted`)

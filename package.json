@@ -1,6 +1,6 @@
 {
   "name": "shizu",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A bot written for fun",
   "main": "./dist/bot.ts",
   "scripts": {
@@ -27,7 +27,7 @@
     "axios": "^0.21.1",
     "common-tags": "^1.8.0",
     "discord.js": "discordjs/discord.js",
-    "discordjs-paginate": "^0.0.7-bunnygirl",
+    "discordjs-paginate": "kakarot-dev/DiscordJS-Paginate#patch-1",
     "dotenv": "^10.0.0",
     "fortnite": "^4.3.2",
     "glob": "^7.1.6",

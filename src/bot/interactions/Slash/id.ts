@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CommandInteraction } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 
 abstract class IDInteraction extends Interaction {
 	constructor() {

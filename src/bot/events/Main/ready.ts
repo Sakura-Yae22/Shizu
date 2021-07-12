@@ -2,8 +2,8 @@
 import Event from '../../struct/Event';
 import { stripIndents } from 'common-tags';
 import { Check, Cache } from '../../struct/Check';
-import { InteractionRegistry } from '../../struct/registries/export/RegistryIndex';
-
+import { InteractionRegistry, ButtonRegistry } from '../../struct/registries/export/RegistryIndex';
+import status from '../../struct/Discord-Status';
 abstract class ReadyEvent extends Event {
 	constructor() {
 		super({
@@ -24,8 +24,10 @@ abstract class ReadyEvent extends Event {
 		cli()
 		Cache()
 		await this.client.anischedule.init()
-		InteractionRegistry(this.client)
-		;(await import('../../struct/Discord-Status')).default(this.client)
+		InteractionRegistry(this.client);
+		ButtonRegistry(this.client);
+		status(this.client);
+		// (await import('../../struct/Discord-Status')).default(this.client) 
 	}
 }
 

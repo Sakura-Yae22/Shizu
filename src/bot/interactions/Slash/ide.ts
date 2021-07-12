@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-case-declarations */
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 
 abstract class IdeInteraction extends Interaction {
 	constructor() {

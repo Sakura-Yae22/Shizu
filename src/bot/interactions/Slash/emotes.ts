@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CommandInteraction, GuildMember, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 import _ from 'lodash';
 
 abstract class EmotesInteraction extends Interaction {
