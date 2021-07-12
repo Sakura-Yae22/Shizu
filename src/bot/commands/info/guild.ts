@@ -87,7 +87,7 @@ abstract class ServerCommand extends Command {
 												**❯ Boost Tier:** ${message.guild.premiumTier ? `Tier ${message.guild.premiumTier}` : 'None'}
 												**❯ Explicit Filter:** ${filterLevels[message.guild.explicitContentFilter]}
 												**❯ Verification Level:** ${verificationLevels[message.guild.verificationLevel]}
-												**❯ Time Created:** <t:${message.guild.createdTimestamp}>
+												**❯ Time Created:** <t:${ Math.round(message.guild.createdTimestamp / 1000) }:f>
 											`))
 					.setTimestamp();
 				const embed2 = new MessageEmbed()
