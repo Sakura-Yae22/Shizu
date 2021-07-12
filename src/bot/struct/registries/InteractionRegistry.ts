@@ -6,12 +6,9 @@ import { sync } from 'glob';
 import { resolve } from 'path';
 import Bot from '../../client/Client';
 import Interaction from '../Interaction';
-// sudo dd if=/dev/zero of=/swapfile bs=1M count=1024
-// sudo mkswap /swapfile
-//  sudo swapon /swapfile
-// tslint:disable-next-line: ban-types
+
 const registerInteraction: Function = (client: Bot) => {
-	const interactionFiles = sync(resolve('dist/bot/interactions/**/*'));
+	const interactionFiles = sync(resolve('dist/bot/interactions/Slash/**/*'));
 	interactionFiles.forEach(async (file) => {
 		if (/\.(j|t)s$/iu.test(file)) {
 			const File = require(file).default;

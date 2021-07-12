@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Client, Collection, Intents, ClientUser, Options } from 'discord.js';
 import { CommandRegistry, EventRegistry } from '../struct/registries/export/RegistryIndex';
-import { CommandOptions, EventOptions, InteractionCommandOptions } from '../types/Options';
+import { ButtonOptions, CommandOptions, EventOptions, InteractionCommandOptions } from '../types/Options';
 import settings from '../settings';
 import { connect } from 'mongoose';
 import Kitsu from '../struct/Kitsu/Kitsu';
@@ -19,6 +19,7 @@ class Bot extends Client {
 	public cooldowns = new Collection<string, Collection<string, number>>();
 	public icooldowns = new Collection<string, Collection<string, number>>();
 	public events = new Collection<string, EventOptions>();
+	public buttons = new Collection<string, ButtonOptions>();
 	public kitsu: any;
 	public fortnite: any;
 	public logs: any;

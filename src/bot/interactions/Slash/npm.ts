@@ -2,7 +2,7 @@
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CommandInteraction, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 import fetch from 'node-fetch';
 
 abstract class NpmInteraction extends Interaction {

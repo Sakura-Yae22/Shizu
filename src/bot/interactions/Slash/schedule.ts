@@ -3,9 +3,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { CommandInteraction, GuildMember } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 import momentTimezone from 'moment-timezone';
-import { Schedule_Schema as scheduledSchema } from '../mongoose/schemas/schedule';
+import { Schedule_Schema as scheduledSchema } from '../../mongoose/schemas/schedule';
 
 abstract class ScheduleInteraction extends Interaction {
     constructor() {

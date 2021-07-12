@@ -1,4 +1,4 @@
-import { PermissionString, Message, ApplicationCommandOptionData, Interaction } from 'discord.js';
+import { PermissionString, Message, ApplicationCommandOptionData, Interaction, ButtonInteraction } from 'discord.js';
 
 
 export interface CommandOptions {
@@ -26,16 +26,15 @@ export interface InteractionCommandOptions {
 
 export type CommandType = Omit<CommandOptions, 'exec'>;
 export type InteractionType = Omit<InteractionCommandOptions, 'exec'>;
+export type ButtonType = Omit<ButtonOptions, 'exec'>
 
 export interface EventOptions {
 	name: string;
 	once?: boolean;
 }
-export interface IManagerEvent {
+
+export interface ButtonOptions {
 	name: string;
-	// exec: (
-	// 	manager: import('erela.js').Manager,
-	// 	args: any[]
-	// ) => Promise<unknown>;
 	once?: boolean;
+	exec: (interaction: ButtonInteraction) => Promise<void>;
 }

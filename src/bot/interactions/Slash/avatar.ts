@@ -2,7 +2,7 @@
 /* eslint-disable no-useless-escape */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ColorResolvable, CommandInteraction, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 
 abstract class AvatarInteraction extends Interaction {
 	constructor() {

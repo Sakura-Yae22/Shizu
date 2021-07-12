@@ -16,7 +16,7 @@ abstract class InteractionCommand {
 				this.options = options.options;
 		}
 
-		public abstract exec(interactions: Interaction, args: (string | number | boolean | undefined)[]): unknown | Promise<unknown>;
+		public abstract exec(interactions: Interaction, args: (string | number | boolean | undefined)[]): void | Promise<void>;
 }
 
 export default InteractionCommand;

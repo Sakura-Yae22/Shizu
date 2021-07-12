@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { ColorResolvable, CommandInteraction, MessageEmbed } from 'discord.js';
-import Interaction from '../struct/Interaction';
+import Interaction from '../../struct/Interaction';
 import { Statuspage } from 'statuspage.js';
 
 abstract class DiscordStatusInteraction extends Interaction {
