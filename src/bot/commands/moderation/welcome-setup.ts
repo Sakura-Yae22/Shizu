@@ -24,7 +24,7 @@
 
 // 	// tslint:disable-next-line: promise-function-async
 // 	public async exec(message: Message, args: string[]) {
-// 		try {
+//
 // 			if (!message.guild) return
 // 			if (message.channel instanceof NewsChannel || message.channel instanceof DMChannel) return message.reply({
 // 				content: `Pls make sure this is a simple text channel : )`
@@ -49,7 +49,6 @@
 // 							max: 1,
 // 							time: 1000 * 60,
 // 						});
-
 
 // 						firstCollector.on('end', async msg => {
 // 							const dmmessage = msg.first();
@@ -91,7 +90,6 @@
 // 						await message.channel.send({
 // 							content: `Now Tell Me What to send in the channel\n** Note:** This will be set as description for the embed\n**60** secs`
 // 						});
-
 
 // 						const secsecondFilter = m => m.author.id === message.author.id;
 // 						const secsecondCollector = new MessageCollector(channel, secsecondFilter, {
@@ -164,7 +162,6 @@
 // 						await message.channel.send({
 // 							content: `Now Tell Me What to send in the channel\n** Note:** This will be set as description for the embed\n**60** secs`
 // 						});
-
 
 // 						const thrsecondFilter = m => m.author.id === message.author.id;
 // 						const thrsecondCollector = new MessageCollector(message.channel, thrsecondFilter, {

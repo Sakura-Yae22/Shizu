@@ -1,38 +1,37 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import Command from '../../struct/Command';
-import { Message, MessageEmbed } from 'discord.js';
-import axios from 'axios';
+import Command from "../../struct/Command";
+import { Message, MessageEmbed } from "discord.js";
+import axios from "axios";
 
 abstract class BiteCommand extends Command {
-    constructor() {
-        super({
-            name: 'bite',
-            aliases: [],
-            description: '"Bite at ur friends the discord way : ) [NSFW should be reported immediately and the command should be be disabled]',
-            usage: '<prefix>bite [person]',
-            category: 'Action',
-            cooldown: 0,
-            ownerOnly: false,
-            guildOnly: false,
-            requiredArgs: 0,
-            userPermissions: [],
-            clientPermissions: []
-        });
-    }
-    public async exec(message: Message, args: string[],/* prefix: string */) {
-        try {
-            let target = message.mentions.members?.first() ?? args[0];
-            if (!args[0]) target = '**air...**'
-            const {
-                data: {
-                    url
-                }
-            } = await axios.get(`https://waifu.pics/api/sfw/bite`)
-            const embed = new MessageEmbed().setImage(`${url}`).setDescription(`Aww!! ${message.author} is biting at ${target}`).setColor(`#FFC0CB`)
-            message.reply({ embeds: [embed] })        } catch (e) {
-            return this.client.logs(message, e, "error")
-        }
-    }
+  constructor() {
+    super({
+      name: "bite",
+      aliases: [],
+      description:
+        '"Bite at ur friends the discord way : ) [NSFW should be reported immediately and the command should be be disabled]',
+      usage: "<prefix>bite [person]",
+      category: "Action",
+      cooldown: 0,
+      ownerOnly: false,
+      guildOnly: false,
+      requiredArgs: 0,
+      userPermissions: [],
+      clientPermissions: [],
+    });
+  }
+  public async exec(message: Message, args: string[] /* prefix: string */) {
+    let target = message.mentions.members?.first() ?? args[0];
+    if (!args[0]) target = "**air...**";
+    const {
+      data: { url },
+    } = await axios.get(`https://waifu.pics/api/sfw/bite`);
+    const embed = new MessageEmbed()
+      .setImage(`${url}`)
+      .setDescription(`Aww!! ${message.author} is biting at ${target}`)
+      .setColor(`#FFC0CB`);
+    message.reply({ embeds: [embed] });
+  }
 }
 export default BiteCommand;

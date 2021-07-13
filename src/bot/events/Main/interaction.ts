@@ -63,7 +63,10 @@ abstract class InteractionEvent extends Event {
         return;
       }
       try {
-        await button.exec(interaction);
+        await button.exec(interaction).catch((err) => {
+          console.log(err);
+          return interaction.reply(`${err.message}`);
+        });
       } catch (err: any) {
         interaction.reply(`${err.message}`);
         return;
