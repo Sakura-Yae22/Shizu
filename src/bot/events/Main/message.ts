@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Event from "../../struct/Event";
-import { Message, TextChannel, Guild, Collection } from "discord.js";
+import {
+  Message,
+  TextChannel,
+  Guild,
+  Collection,
+  MessageEmbed,
+} from "discord.js";
 import settings from "../../settings";
 import { getPrefix } from "../../struct/Check";
 
@@ -145,9 +151,13 @@ abstract class MessageEvent extends Event {
         }
         if (command.exec.constructor.name === "AsyncFunction") {
           command.exec(message, args, prefix).catch((err) => {
+            const errEmbed = new MessageEmbed()
+              .setColor("RED")
+              .setDescription(err.message)
+              .setTitle("Error Message");
             console.log(err);
             message.channel.send({
-              content: err.message,
+              embeds: [errEmbed],
             });
           });
           return;
@@ -155,10 +165,14 @@ abstract class MessageEvent extends Event {
         try {
           command.exec(message, args, prefix);
           return;
-        } catch (error) {
+        } catch (error: any) {
+          const errEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setDescription(error.message)
+            .setTitle("Error Message");
           console.log(error);
           message.reply({
-            content: "there was an error running this command.",
+            embeds: [errEmbed],
           });
         }
       }

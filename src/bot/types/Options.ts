@@ -30,7 +30,7 @@ export interface InteractionCommandOptions {
   exec: (
     interactions: Interaction,
     args: (string | number | boolean | undefined)[]
-  ) => unknown | Promise<unknown>;
+  ) => any | Promise<any>;
 }
 
 export type CommandType = Omit<CommandOptions, "exec">;

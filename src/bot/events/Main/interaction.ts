@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Interaction, Collection } from "discord.js";
+import { Interaction, Collection, MessageEmbed } from "discord.js";
 import Event from "../../struct/Event";
 
 abstract class InteractionEvent extends Event {
@@ -13,6 +13,8 @@ abstract class InteractionEvent extends Event {
   public async exec(interaction: Interaction) {
     if (interaction.isCommand()) {
       const command = this.client.interactions.get(interaction.commandName);
+      const arr: any[] = [];
+      await interaction.options.forEach((options) => arr.push(options));
       if (command?.cooldown) {
         if (!this.client.cooldowns.has(command.name)) {
           this.client.cooldowns.set(command.name, new Collection());
@@ -43,15 +45,28 @@ abstract class InteractionEvent extends Event {
           cooldownAmount
         );
       }
-
-      try {
-        const arr: any[] = [];
-        await interaction.options.forEach((options) => arr.push(options));
-        await command?.exec(interaction, arr);
-      } catch (err: any) {
-        // console.log(err);
-        interaction.reply(`${err.message}`);
+      if (command?.exec.constructor.name === "AsyncFunction") {
+        command.exec(interaction, arr).catch((err) => {
+          const errEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setDescription(err.message)
+            .setTitle("Error Message");
+          console.log(err);
+          interaction.reply({
+            embeds: [errEmbed],
+            ephemeral: true,
+          });
+        });
         return;
+      } else {
+        try {
+          command?.exec(interaction, arr);
+          return;
+        } catch (err: any) {
+          console.log(err);
+          interaction.reply(`${err.message}`);
+          return;
+        }
       }
     } else if (interaction.isButton()) {
       const button = this.client.buttons.get(interaction.customId);
@@ -62,15 +77,10 @@ abstract class InteractionEvent extends Event {
         // })
         return;
       }
-      try {
-        await button.exec(interaction).catch((err) => {
-          console.log(err);
-          return interaction.reply(`${err.message}`);
-        });
-      } catch (err: any) {
-        interaction.reply(`${err.message}`);
-        return;
-      }
+      button.exec(interaction).catch((err) => {
+        console.log(err);
+        return interaction.reply(`${err.message}`);
+      });
     }
     return;
   }
