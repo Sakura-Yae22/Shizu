@@ -4,12 +4,11 @@
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
 import { prefix as prefixes } from "../../mongoose/schemas/prefix";
-import { prefixcache } from "../../struct/Check";
 
 abstract class PrefixCommand extends Command {
   constructor() {
     super({
-      name: "setprefix",
+      name: "set-prefix",
       aliases: ["prefix"],
       description: "Prefix for the bot",
       usage: "<prefix>prefix <set-prefix>",
@@ -47,7 +46,7 @@ abstract class PrefixCommand extends Command {
       }
     );
 
-    prefixcache.set(message.guild?.id, prefixess);
+    this.client.cache.prefixcache.set(message.guild?.id as string, prefixess);
     await message.channel.send({
       content: `Prefix has been updated from ${prefix} to ${prefixess}`,
     });

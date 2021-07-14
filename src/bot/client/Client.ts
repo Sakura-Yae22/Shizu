@@ -16,6 +16,7 @@ import Kitsu from "../struct/Kitsu/Kitsu";
 import ft from "fortnite";
 import log from "../struct/Logs";
 import * as Anischedule from "../struct/AniSchedule";
+import { Cache } from "../struct/Check";
 // import * as premium from '../struct/PremiumSystem'
 
 class Bot extends Client {
@@ -26,6 +27,7 @@ class Bot extends Client {
   public icooldowns = new Collection<string, Collection<string, number>>();
   public events = new Collection<string, EventOptions>();
   public buttons = new Collection<string, ButtonOptions>();
+  public cache: Cache;
   public kitsu: any;
   public fortnite: any;
   public logs: any;
@@ -55,6 +57,7 @@ class Bot extends Client {
     this.kitsu = new Kitsu();
     this.fortnite = new ft(process.env.FORTTOKEN ?? "test");
     this.logs = log;
+    this.cache = new Cache(this);
     this.anischedule = new Anischedule.Anischedule(this);
   }
   public start() {

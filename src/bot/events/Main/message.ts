@@ -9,7 +9,6 @@ import {
   MessageEmbed,
 } from "discord.js";
 import settings from "../../settings";
-import { getPrefix } from "../../struct/Check";
 
 abstract class MessageEvent extends Event {
   constructor() {
@@ -21,7 +20,7 @@ abstract class MessageEvent extends Event {
   public async exec(message: Message): Promise<void> {
     // const prefix = message.guild ? getPrefix(message.guild.id) ? getPrefix(message.guild.id) : this.client.defaultprefix : this.client.defaultprefix
     let prefix = message.guild
-      ? getPrefix(message.guild.id)
+      ? this.client.cache.getPrefix(message.guild.id)
       : this.client.defaultprefix;
     if (!prefix) prefix = this.client.defaultprefix;
     if (!message.content.startsWith(prefix)) return;

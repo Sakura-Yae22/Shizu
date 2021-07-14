@@ -63,9 +63,15 @@ abstract class InteractionEvent extends Event {
           command?.exec(interaction, arr);
           return;
         } catch (err: any) {
+          const errEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setDescription(err.message)
+            .setTitle("Error Message");
           console.log(err);
-          interaction.reply(`${err.message}`);
-          return;
+          interaction.reply({
+            embeds: [errEmbed],
+            ephemeral: true,
+          });
         }
       }
     } else if (interaction.isButton()) {

@@ -11,7 +11,6 @@ import {
   VoiceChannel,
 } from "discord.js";
 import { modlogs as schema } from "../../mongoose/schemas/modlogs";
-import { ModLogsCache } from "../../struct/Check";
 
 abstract class ModLogsCommand extends Command {
   constructor() {
@@ -37,7 +36,7 @@ abstract class ModLogsCommand extends Command {
     if (!Data) {
       const cid =
         message.mentions.channels.first() ??
-        (await message.guild?.channels.cache.get(`${BigInt(args[0])}`));
+        message.guild?.channels.cache.get(`${BigInt(args[0])}`);
       if (!cid) {
         return message.reply(
           `Could\'nt find a channel! Please provide a valid Id`
@@ -62,7 +61,7 @@ abstract class ModLogsCommand extends Command {
         guildId: String(message.guild?.id),
         channelId: cid.id,
       }).save();
-      ModLogsCache.set(message.guild?.id, cid.id);
+      this.client.cache.modlogscache.set(message.guild?.id as string, cid.id);
       if (cid instanceof TextChannel)
         await cid.createWebhook("Shizu Logger", {
           avatar: `${this.client.user.displayAvatarURL()}`,
@@ -75,7 +74,7 @@ abstract class ModLogsCommand extends Command {
       await schema.findOneAndRemove({
         guildId: String(message.guild?.id),
       });
-      ModLogsCache.delete(message.guild?.id);
+      this.client.cache.modlogscache.delete(message.guild?.id as string);
       message.channel.send({
         content: `**Successfuly Reset the Mod Logs System on your Server!**\npls use this command again to re-setup!`,
       });
