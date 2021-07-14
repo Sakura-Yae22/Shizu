@@ -23,10 +23,9 @@ export class Cache {
   modlogscache = new Collection<string, string>();
   statuscache = Status_cache;
   client: Bot;
-  constructor(client: Bot) {
+  constructor() {
     this.loadData();
     //Object.defineProperty(client, "this", Bot);
-    this.client = client;
   }
   async loadData() {
     const prefix = await prefixes.find();
@@ -149,8 +148,8 @@ export class Cache {
     }
     await scheduledSchema.deleteMany(query);
   }
-  check() {
-    this.checkPosts(this.client);
-    this.MuteCheck(this.client);
+  check(client: Bot) {
+    this.checkPosts(client);
+    this.MuteCheck(client);
   }
 }

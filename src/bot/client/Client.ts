@@ -57,7 +57,7 @@ class Bot extends Client {
     this.kitsu = new Kitsu();
     this.fortnite = new ft(process.env.FORTTOKEN ?? "test");
     this.logs = log;
-    this.cache = new Cache(this);
+    this.cache = new Cache();
     this.anischedule = new Anischedule.Anischedule(this);
   }
   public start() {
