@@ -50,7 +50,6 @@ abstract class HelpCommand extends Command {
     // const categories = this.removeDuplicates(
     //   this.client.commands.filter((c) => !c.ownerOnly).map((c) => c.category)
     // );
-
     if (command) {
       const embed = new MessageEmbed()
         .setColor("RANDOM")
