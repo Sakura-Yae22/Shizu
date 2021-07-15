@@ -8,8 +8,8 @@ abstract class InviteCommand extends Command {
     super({
       name: "invite",
       aliases: [],
-      description: "Searches from the discordJs docs",
-      usage: "<prefix>djs <search term>",
+      description: "Gives the invite link of the bot",
+      usage: "<prefix>invite",
       category: "info",
       cooldown: 2,
       ownerOnly: false,
@@ -20,7 +20,7 @@ abstract class InviteCommand extends Command {
     });
   }
 
-  public async exec(message: Message, _ars: string[], prefix: string) {
+  public async exec(message: Message, _args: string[], prefix: string) {
     const embed = new MessageEmbed()
       .setColor(message.guild?.me!.displayHexColor as ColorResolvable)
       .setTitle(`${this.client.user?.tag} (${prefix})`)
