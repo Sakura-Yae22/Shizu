@@ -45,13 +45,22 @@ abstract class HelpCommand extends Command {
     });
   }
 
-  public exec(message: Message, args: string[], prefix: string) {
+  public async exec(message: Message, args: string[], prefix: string) {
     const command = this.client.commands.get(args[0]);
+    const embed = new MessageEmbed()
+      .addField(
+        "Info",
+        "Any command starting with `set` works on a if-exist basis. If data exists, it will be erased, if not, a new data will be set"
+      )
+      .setFooter(
+        `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
+      );
+
     // const categories = this.removeDuplicates(
     //   this.client.commands.filter((c) => !c.ownerOnly).map((c) => c.category)
     // );
     if (command) {
-      const embed = new MessageEmbed()
+      embed
         .setColor("RANDOM")
         .setTitle(`${this.client.user?.username}\\'s Help Menu`)
         .setAuthor(
@@ -74,7 +83,7 @@ abstract class HelpCommand extends Command {
         components: [row],
       });
     } else {
-      const embed = new MessageEmbed()
+      embed
         .setColor("RANDOM")
         .setTitle(`${this.client.user?.username}\\'s Help Menu`)
         .setAuthor(

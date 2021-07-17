@@ -43,8 +43,6 @@ abstract class FortniteInteraction extends Interaction {
 	public async exec(interaction: CommandInteraction, args: any[]) {
 		const arg = args[0].value;
 		const player = args[1].value;
-		console.log(arg + ': ' + player)
-		try {
 			switch (arg) {
 				case 'pc':
 					const datapc = await this.client.fortnite.user(`${player}`, 'pc');
@@ -176,11 +174,6 @@ abstract class FortniteInteraction extends Interaction {
 					});
 					break;
 			}
-		} catch (err) {
-			interaction.reply({
-				content: 'There is no such player for what u specified, or there must be an error\n[Either way, if u think the name is correct, Report this to the devs](https://discord.gg/b7HzMtSYtX)'
-			});
-		}
 	}
 }
 

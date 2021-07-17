@@ -27,22 +27,22 @@ abstract class ChatInteraction extends Interaction {
       text.push(arg.value);
     });
     fetch(
-      `https://api.monkedev.com/fun/chat?msg=${encodeURIComponent(
+      `https://aria-api.up.railway.app/misc/chat?msg=${encodeURIComponent(
         text.join(" ")
-      )}&uid=${interaction.user.id}&key=${process.env.MONKE}`
+      )}&uid=${interaction.user.id}`,
+      {
+        headers: {
+          auth: process.env.CHAT ?? "NULL",
+        },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
         const embed = new MessageEmbed()
-          .setDescription(`${data.response}`)
-          .setFooter("Monke dev api = https://api.monkedev.com =");
+          .setColor("RANDOM")
+          .setDescription(`${data.message}`);
         interaction.reply({
           embeds: [embed],
-        });
-      })
-      .catch(async (e) => {
-        return interaction.reply({
-          content: `${e.message}`,
         });
       });
   }

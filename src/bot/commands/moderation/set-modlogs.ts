@@ -3,13 +3,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from "../../struct/Command";
-import {
-  CategoryChannel,
-  Message,
-  StageChannel,
-  TextChannel,
-  VoiceChannel,
-} from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import { modlogs as schema } from "../../mongoose/schemas/modlogs";
 
 abstract class ModLogsCommand extends Command {
@@ -24,7 +18,7 @@ abstract class ModLogsCommand extends Command {
       ownerOnly: false,
       guildOnly: true,
       requiredArgs: 1,
-      userPermissions: ["ADMINISTRATOR"],
+      userPermissions: ["MANAGE_GUILD"],
       clientPermissions: ["MANAGE_WEBHOOKS"],
     });
   }
@@ -42,26 +36,16 @@ abstract class ModLogsCommand extends Command {
           `Could\'nt find a channel! Please provide a valid Id`
         );
       }
-      if (cid instanceof CategoryChannel) {
+      if (!(cid instanceof TextChannel)) {
         return message.reply(
-          `This is not a valid channel, This is is a category tagged\nMake sure this this is a text channel`
-        );
-      }
-      if (cid instanceof VoiceChannel) {
-        return message.reply(
-          `This is not a valid channel, This is is a Voice channel tagged\nMake sure this this is a text channel`
-        );
-      }
-      if (cid instanceof StageChannel) {
-        return message.reply(
-          `This is not a valid channel, This is is a Stage Channel Tagged\nMake sure this this is a text channel`
+          `This is not a valid channel tagged, Make sure this this is a text channel`
         );
       }
       await new schema({
         guildId: String(message.guild?.id),
         channelId: cid.id,
       }).save();
-      this.client.cache.modlogscache.set(message.guild?.id as string, cid.id);
+      this.client.cache.modlogscache.set(`${message.guild?.id}`, cid.id);
       if (cid instanceof TextChannel)
         await cid.createWebhook("Shizu Logger", {
           avatar: `${this.client.user.displayAvatarURL()}`,
@@ -74,7 +58,7 @@ abstract class ModLogsCommand extends Command {
       await schema.findOneAndRemove({
         guildId: String(message.guild?.id),
       });
-      this.client.cache.modlogscache.delete(message.guild?.id as string);
+      this.client.cache.modlogscache.delete(`${message.guild?.id}`);
       message.channel.send({
         content: `**Successfuly Reset the Mod Logs System on your Server!**\npls use this command again to re-setup!`,
       });

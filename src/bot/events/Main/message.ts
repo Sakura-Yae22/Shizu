@@ -175,28 +175,15 @@ abstract class MessageEvent extends Event {
             cooldownAmount
           );
         }
-        if (command.exec.constructor.name === "AsyncFunction") {
-          command.exec(message, args, prefix).catch((err) => {
-            embed.setDescription(err.message);
-            embed.setTitle("Error Message");
-            console.log(err);
-            message.channel.send({
-              embeds: [embed],
-            });
-          });
-          return;
-        }
-        try {
-          command.exec(message, args, prefix);
-          return;
-        } catch (error: any) {
-          embed.setDescription(error.message);
+        command.exec(message, args, prefix).catch((err) => {
+          embed.setDescription(err.message);
           embed.setTitle("Error Message");
-          console.log(error);
-          message.reply({
+          console.log(err);
+          message.channel.send({
             embeds: [embed],
           });
-        }
+        });
+        return;
       }
     }
   }

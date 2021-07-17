@@ -17,7 +17,7 @@ abstract class PrefixCommand extends Command {
       ownerOnly: false,
       guildOnly: true,
       requiredArgs: 0,
-      userPermissions: ["ADMINISTRATOR"],
+      userPermissions: ["MANAGE_GUILD"],
       clientPermissions: [],
     });
   }
@@ -46,7 +46,7 @@ abstract class PrefixCommand extends Command {
       }
     );
 
-    this.client.cache.prefixcache.set(message.guild?.id as string, prefixess);
+    this.client.cache.prefixcache.set(`${message.guild?.id}`, prefixess);
     await message.channel.send({
       content: `Prefix has been updated from ${prefix} to ${prefixess}`,
     });

@@ -15,23 +15,33 @@ abstract class PurgeCommand extends Command {
       ownerOnly: false,
       guildOnly: true,
       requiredArgs: 0,
-      userPermissions: ["MANAGE_MESSAGES"],
+      userPermissions: [],
       clientPermissions: ["MANAGE_MESSAGES"],
     });
   }
 
   public async exec(message: Message, args: string[]) {
     const qty = Math.round(Number(args[0]));
-    let messages: [] = [];
-    const embed = new MessageEmbed();
+    const messages: Collection<`${bigint}`, Message>[] = [];
+    const embed = new MessageEmbed()
+      .setColor(0xff0000)
+      .setTitle("Purge Messages Command");
+
+    if (!message.member?.permissions.has("ADMINISTRATOR")) {
+      return message.channel.send({
+        embeds: [
+          embed.setDescription(
+            `You have been denied to use this command. Please make sure you have Admin privileges\n\nThis is check is present because this command works with the api to allow unlimited number of messages to be deleted ( as long as the messages are inside the 14 day limit ) without getting ratelimited.`
+          ),
+        ],
+      });
+    }
     if (isNaN(qty) || qty < 1) {
       return message.reply({
         embeds: [
-          embed
-            .setColor("RED")
-            .setDescription(
-              `You have specified a invalid arg which is not a number`
-            ),
+          embed.setDescription(
+            `You have specified a invalid arg which is not a number`
+          ),
         ],
       });
     }
@@ -47,15 +57,19 @@ abstract class PurgeCommand extends Command {
         value,
         true
       );
-      messages = messages.concat(deleted);
+      messages.push(deleted);
       if (value > deleted.size) {
         amounts.length = 0;
       }
     }
     const size = messages.length;
-
+    embed.setDescription(
+      `Approximately ${
+        size * 99
+      } Messages are Purged. \nThis number may not be accurate.`
+    );
     message.channel.send({
-      content: String(size),
+      embeds: [embed],
     });
   }
 }
