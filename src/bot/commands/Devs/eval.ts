@@ -73,15 +73,11 @@ abstract class EvalCommand extends Command {
         });
       }
     } catch (err) {
-      // message.channel.send({
-      // 	content: stripIndents`
-      // 	${err.message}
-      // 	${err.stack}
-      // 	`,
-      // 	split: true,
-      // 	code: 'js'
-      // });
-      return this.client.logs(message, err, "error");
+      return message.channel.send({
+      	content: stripIndents`
+      	${err.message}
+      	`,
+      });
     }
   }
 }
