@@ -18,6 +18,7 @@ abstract class MessageEvent extends Event {
   }
 
   public async exec(message: Message): Promise<void> {
+    const embed = new MessageEmbed().setColor("RED");
     // const prefix = message.guild ? getPrefix(message.guild.id) ? getPrefix(message.guild.id) : this.client.defaultprefix : this.client.defaultprefix
     let prefix = message.guild
       ? this.client.cache.getPrefix(message.guild.id)
@@ -40,9 +41,13 @@ abstract class MessageEvent extends Event {
             ch?.type === "GUILD_NEWS_THREAD" ||
             ch?.type === "GUILD_PUBLIC_THREAD"
           ) {
-            message.channel.send(
-              `You have mentioned a channel which is a thread`
-            );
+            message.channel.send({
+              embeds: [
+                embed.setDescription(
+                  `You have mentioned a channel which is a thread`
+                ),
+              ],
+            });
             return;
           }
         }
@@ -51,12 +56,18 @@ abstract class MessageEvent extends Event {
           !settings.BOT_OWNER_ID.includes(message.author.id)
         ) {
           message.channel.send({
-            content: "This command can only be used by the owner of the bot.",
+            embeds: [
+              embed.setDescription(
+                "This command can only be used by the owner of the bot."
+              ),
+            ],
           });
           return;
         } else if (command.guildOnly && !(message.guild instanceof Guild)) {
           message.channel.send({
-            content: "This command can only be used in a guild.",
+            embeds: [
+              embed.setDescription("This command can only be used in a guild."),
+            ],
           });
           return;
         }
@@ -77,11 +88,15 @@ abstract class MessageEvent extends Event {
             }
             if (missingPermissions.length) {
               message.channel.send({
-                content: String(
-                  `Your missing these required permissions: ${missingPermissions.join(
-                    ", "
-                  )}`
-                ),
+                embeds: [
+                  embed.setDescription(
+                    String(
+                      `Your missing these required permissions: ${missingPermissions.join(
+                        ", "
+                      )}`
+                    )
+                  ),
+                ],
               });
               return;
             }
@@ -98,11 +113,15 @@ abstract class MessageEvent extends Event {
             }
             if (missingPermissions.length) {
               message.channel.send({
-                content: String(
-                  `I\\'m missing these required permissions: ${missingPermissions.join(
-                    ", "
-                  )}`
-                ),
+                embeds: [
+                  embed.setDescription(
+                    String(
+                      `I\\'m missing these required permissions: ${missingPermissions.join(
+                        ", "
+                      )}`
+                    )
+                  ),
+                ],
               });
               return;
             }
@@ -110,9 +129,13 @@ abstract class MessageEvent extends Event {
         }
         if (command.requiredArgs && command.requiredArgs > args.length) {
           message.channel.send({
-            content: String(
-              `Invalid usage of this command, please refer to \`${prefix}help ${command.name}\``
-            ),
+            embeds: [
+              embed.setDescription(
+                String(
+                  `Invalid usage of this command, please refer to \`${prefix}help ${command.name}\``
+                )
+              ),
+            ],
           });
           return;
         }
@@ -130,13 +153,17 @@ abstract class MessageEvent extends Event {
               if (now < expirationTime) {
                 const timeLeft = (expirationTime - now) / 1000;
                 message.channel.send({
-                  content: String(
-                    `Wait ${timeLeft.toFixed(
-                      1
-                    )} more second(s) before reusing the \`${
-                      command.name
-                    }\` command.`
-                  ),
+                  embeds: [
+                    embed.setDescription(
+                      String(
+                        `Wait ${timeLeft.toFixed(
+                          1
+                        )} more second(s) before reusing the \`${
+                          command.name
+                        }\` command.`
+                      )
+                    ),
+                  ],
                 });
                 return;
               }
@@ -150,13 +177,11 @@ abstract class MessageEvent extends Event {
         }
         if (command.exec.constructor.name === "AsyncFunction") {
           command.exec(message, args, prefix).catch((err) => {
-            const errEmbed = new MessageEmbed()
-              .setColor("RED")
-              .setDescription(err.message)
-              .setTitle("Error Message");
+            embed.setDescription(err.message);
+            embed.setTitle("Error Message");
             console.log(err);
             message.channel.send({
-              embeds: [errEmbed],
+              embeds: [embed],
             });
           });
           return;
@@ -165,13 +190,11 @@ abstract class MessageEvent extends Event {
           command.exec(message, args, prefix);
           return;
         } catch (error: any) {
-          const errEmbed = new MessageEmbed()
-            .setColor("RED")
-            .setDescription(error.message)
-            .setTitle("Error Message");
+          embed.setDescription(error.message);
+          embed.setTitle("Error Message");
           console.log(error);
           message.reply({
-            embeds: [errEmbed],
+            embeds: [embed],
           });
         }
       }

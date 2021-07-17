@@ -27,12 +27,7 @@ abstract class ChannelCommand extends Command {
       guildOnly: true,
       requiredArgs: 1,
       userPermissions: ["MANAGE_CHANNELS"],
-      clientPermissions: [
-        "ADD_REACTIONS",
-        "USE_EXTERNAL_EMOJIS",
-        "MANAGE_MESSAGES",
-        "MANAGE_CHANNELS",
-      ],
+      clientPermissions: ["MANAGE_CHANNELS"],
     });
   }
 

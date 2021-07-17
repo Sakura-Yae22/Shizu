@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable no-useless-escape */
 import Command from "../../struct/Command";
-import { Message, MessageEmbed } from "discord.js";
-import Paginate from "discordjs-paginate";
+import { Message, MessageEmbed, TextChannel } from "discord.js";
+// import Paginate from "discordjs-paginate";
+import { Pagination } from "../../struct/Pagination";
 
 abstract class MangaInfoCommand extends Command {
   constructor() {
@@ -79,17 +80,23 @@ abstract class MangaInfoCommand extends Command {
           .setImage(manga.posterImage.original);
         arr.push(embed);
       });
-      const embeds = new Paginate(arr, message, {
-        appendPageInfo: true,
-        timeout: 60000,
-        previousbtn: "841961355799691264",
-        nextbtn: "841961438884003870",
-        stopbtn: "841962179490349068",
-        // removeUserReactions: message.channel.type !== 'dm'
-        removeUserReactions: false,
-        removeAllReactions: false,
-      });
-      await embeds.exec();
+      // const embeds = new Paginate(arr, message, {
+      //   appendPageInfo: true,
+      //   timeout: 60000,
+      //   previousbtn: "841961355799691264",
+      //   nextbtn: "841961438884003870",
+      //   stopbtn: "841962179490349068",
+      //   // removeUserReactions: message.channel.type !== 'dm'
+      //   removeUserReactions: false,
+      //   removeAllReactions: false,
+      // });
+      // await embeds.exec();
+      await new Pagination(
+        message,
+        message.channel as TextChannel,
+        arr,
+        "Page"
+      ).paginate();
     });
   }
 }

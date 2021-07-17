@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Command from "../../struct/Command";
 import {
   Message,
@@ -11,11 +9,12 @@ import {
   MessageButton,
   MessageEmbed,
   Permissions,
+  TextChannel,
 } from "discord.js";
 import { watchList } from "../../mongoose/schemas/GuildWatchList";
 import t from "../../struct/text";
 import * as _ from "lodash";
-import Paginate from "discordjs-paginate";
+import { Pagination } from "../../struct/Pagination";
 
 const watch = t(`${process.cwd()}/assets/Watching.graphql`, require);
 
@@ -128,17 +127,23 @@ abstract class WatchingCommand extends Command {
         });
       }
     }
-    const embeds = new Paginate(descriptions, message, {
-      appendPageInfo: true,
-      timeout: 60000,
-      previousbtn: "841961355799691264",
-      nextbtn: "841961438884003870",
-      stopbtn: "841962179490349068",
-      // removeUserReactions: message.channel.type !== 'dm'
-      removeUserReactions: false,
-      removeAllReactions: false,
-    });
-    await embeds.exec();
+    // const embeds = new Paginate(descriptions, message, {
+    //   appendPageInfo: true,
+    //   timeout: 60000,
+    //   previousbtn: "841961355799691264",
+    //   nextbtn: "841961438884003870",
+    //   stopbtn: "841962179490349068",
+    //   // removeUserReactions: message.channel.type !== 'dm'
+    //   removeUserReactions: false,
+    //   removeAllReactions: false,
+    // });
+    // await embeds.exec();
+    await new Pagination(
+      message,
+      message.channel as TextChannel,
+      descriptions,
+      "Page"
+    ).paginate();
   }
 }
 export default WatchingCommand;
