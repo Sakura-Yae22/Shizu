@@ -16,7 +16,7 @@ import Kitsu from "../struct/Kitsu/Kitsu";
 import ft from "fortnite";
 import log from "../struct/Logs";
 import * as Anischedule from "../struct/AniSchedule";
-import { Cache } from "../struct/Check";
+import { Cache } from "../struct/Cache";
 // import * as premium from '../struct/PremiumSystem'
 
 class Bot extends Client {

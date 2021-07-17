@@ -17,10 +17,12 @@ import Bot from "../client/Client";
 import { prefix as prefixes } from "../mongoose/schemas/prefix";
 import { modlogs } from "../mongoose/schemas/modlogs";
 import { Status_cache } from "./Discord-Status";
+import { Suggest } from "../mongoose/schemas/suggest";
 
 export class Cache {
   prefixcache = new Collection<string, string>();
   modlogscache = new Collection<string, string>();
+  suggestcache = new Collection<string, string>();
   statuscache = Status_cache;
   client: Bot;
   constructor() {
@@ -30,12 +32,15 @@ export class Cache {
   async loadData() {
     const prefix = await prefixes.find();
     const modchan = await modlogs.find();
-
+    const suggestchan = await Suggest.find();
     for (const result of prefix) {
       this.prefixcache.set(result.gId, result.prefix);
     }
     for (const result of modchan) {
       this.modlogscache.set(result.guildId, result.channelId);
+    }
+    for (const result of suggestchan) {
+      this.suggestcache.set(result.guildId, result.channelId);
     }
   }
 
@@ -44,6 +49,10 @@ export class Cache {
   }
   getPrefix(guildId: Snowflake) {
     return this.prefixcache.get(guildId);
+  }
+
+  getSuggestChannel(guildId: Snowflake) {
+    return this.suggestcache.get(guildId);
   }
   async MuteCheck(client: Bot) {
     const now = new Date();

@@ -1,6 +1,6 @@
 {
   "name": "shizu",
-  "version": "3.0.1",
+  "version": "3.1.2",
   "description": "A bot written for fun",
   "main": "./dist/bot.ts",
   "scripts": {

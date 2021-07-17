@@ -22,8 +22,6 @@ abstract class CharCommand extends Command {
 
   // tslint:disable-next-line: promise-function-async
   public async exec(message: Message, args: string[], prefix: string) {
-    message.channel.startTyping();
-
     let arr = axios.get("https://anime.rovi.me/list").then((res) => {
       arr = [];
       res.data.characters.forEach((c) => {
@@ -120,7 +118,6 @@ abstract class CharCommand extends Command {
             });
         });
     }
-    message.channel.stopTyping();
   }
 }
 export default CharCommand;

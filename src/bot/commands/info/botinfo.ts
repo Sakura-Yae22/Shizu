@@ -6,10 +6,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, version as djsversion } from "discord.js";
+import {
+  Message,
+  MessageEmbed,
+  TextChannel,
+  version as djsversion,
+} from "discord.js";
 import os from "os";
 const { version } = require(`${process.cwd()}/package.json`);
-import Paginate from "discordjs-paginate";
+// import Paginate from "discordjs-paginate";
+import { Pagination } from "../../struct/Pagination";
 
 abstract class BotInfoCommand extends Command {
   constructor() {
@@ -99,17 +105,23 @@ abstract class BotInfoCommand extends Command {
 
     const embedarr = [hell, hell2, hell3];
 
-    const embeds = new Paginate(embedarr, message, {
-      appendPageInfo: true,
-      timeout: 60000,
-      previousbtn: "841961355799691264",
-      nextbtn: "841961438884003870",
-      stopbtn: "841962179490349068",
-      // removeUserReactions: message.channel.type !== 'dm'
-      removeUserReactions: false,
-      removeAllReactions: false,
-    });
-    await embeds.exec();
+    // const embeds = new Paginate(embedarr, message, {
+    //   appendPageInfo: true,
+    //   timeout: 60000,
+    //   previousbtn: "841961355799691264",
+    //   nextbtn: "841961438884003870",
+    //   stopbtn: "841962179490349068",
+    //   // removeUserReactions: message.channel.type !== 'dm'
+    //   removeUserReactions: false,
+    //   removeAllReactions: false,
+    // });
+    // await embeds.exec();
+    await new Pagination(
+      message,
+      message.channel as TextChannel,
+      embedarr,
+      "Page"
+    ).paginate();
   }
 }
 export default BotInfoCommand;

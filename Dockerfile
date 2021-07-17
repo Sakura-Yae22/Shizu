@@ -1,6 +1,8 @@
 FROM node:14.17.3
 
-WORKDIR /bot
+LABEL name "shizu"
+
+WORKDIR /sz
 
 COPY . .
 

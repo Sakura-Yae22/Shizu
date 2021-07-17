@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Collection, Message, MessageEmbed, TextChannel } from "discord.js";
 
 abstract class PurgeCommand extends Command {
   constructor() {
@@ -15,114 +15,62 @@ abstract class PurgeCommand extends Command {
       ownerOnly: false,
       guildOnly: true,
       requiredArgs: 0,
-      userPermissions: ["MANAGE_MESSAGES"],
+      userPermissions: [],
       clientPermissions: ["MANAGE_MESSAGES"],
     });
   }
 
   public async exec(message: Message, args: string[]) {
-    const { channel } = message;
-    const chan = channel as TextChannel;
-    const user = message.member?.user;
-    const number = parseInt(args[0]);
-    if (!number) {
-      const naw = new MessageEmbed()
-        .setAuthor(
-          `${this.client.user.username}`,
-          `${this.client.user.displayAvatarURL({ dynamic: true })}`
-        )
-        .setDescription(`❎ ${user?.username}, please give me a number`)
-        .setFooter(
-          `Requested by: ${message.author.username}`,
-          user?.displayAvatarURL()
-        )
-        .setTimestamp()
-        .setColor(`#ff3d3d`);
-      message.channel.send({
-        embeds: [naw],
+    const qty = Math.round(Number(args[0]));
+    const messages: Collection<`${bigint}`, Message>[] = [];
+    const embed = new MessageEmbed()
+      .setColor(0xff0000)
+      .setTitle("Purge Messages Command");
+
+    if (!message.member?.permissions.has("ADMINISTRATOR")) {
+      return message.channel.send({
+        embeds: [
+          embed.setDescription(
+            `You have been denied to use this command. Please make sure you have Admin privileges\n\nThis is check is present because this command works with the api to allow unlimited number of messages to be deleted ( as long as the messages are inside the 14 day limit ) without getting ratelimited.`
+          ),
+        ],
       });
-    } else {
-      if (isNaN(number)) {
-        const notanumber = new MessageEmbed()
-          .setAuthor(
-            `${this.client.user.username}`,
-            `${this.client.user.displayAvatarURL({ dynamic: true })}`
-          )
-          .setDescription(`❎ ${user?.username}, please give me a number`)
-          .setFooter(
-            `Requested by: ${message.author.username}`,
-            user?.displayAvatarURL()
-          )
-          .setColor(`#ff3d3d`)
-          .setTimestamp();
-        message.channel.send({
-          embeds: [notanumber],
-        });
-      } else {
-        if (number > 100) {
-          const loldont = new MessageEmbed()
-            .setAuthor(
-              `${this.client.user.username}`,
-              `${this.client.user.displayAvatarURL({ dynamic: true })}`
-            )
-            .setDescription(
-              `❎ ${user?.username}, please give me a number between 1-100`
-            )
-            .setFooter(
-              `Requested by: ${message.author.username}`,
-              user?.displayAvatarURL()
-            )
-            .setColor(`#ff3d3d`)
-            .setTimestamp();
-          message.channel.send({
-            embeds: [loldont],
-          });
-        } else {
-          if (number < 1) {
-            const megobruhnow = new MessageEmbed()
-              .setAuthor(
-                `${this.client.user.username}`,
-                `${this.client.user.displayAvatarURL({ dynamic: true })}`
-              )
-              .setDescription(
-                `❎ ${user?.username}, please give me a number between 1-100`
-              )
-              .setFooter(
-                `Requested by: ${message.author.username}`,
-                user?.displayAvatarURL()
-              )
-              .setColor(`#ff3d3d`)
-              .setTimestamp();
-            message.channel.send({
-              embeds: [megobruhnow],
-            });
-          } else {
-            const awaits = await chan.bulkDelete(number);
-            const done = new MessageEmbed()
-              .setTitle("Success!")
-              .setAuthor(
-                `${this.client.user.username}`,
-                `${this.client.user.displayAvatarURL({ dynamic: true })}`
-              )
-              .setDescription(
-                `✅ ${user?.username}, I have deleted ${awaits.size} messages`
-              )
-              .setFooter(
-                `Requested by: ${message.author.username}`,
-                user?.displayAvatarURL()
-              )
-              .setColor(`#3cf05a`)
-              .setTimestamp();
-            const msg = await message.channel.send({
-              embeds: [done],
-            });
-            this.client.setTimeout(() => {
-              msg.delete();
-            }, 5000);
-          }
-        }
+    }
+    if (isNaN(qty) || qty < 1) {
+      return message.reply({
+        embeds: [
+          embed.setDescription(
+            `You have specified a invalid arg which is not a number`
+          ),
+        ],
+      });
+    }
+    let value;
+    const amounts = Array.from(
+      { length: Math.floor(qty / 99) },
+      () => 99
+    ).concat([qty % 99]);
+
+    // eslint-disable-next-line no-cond-assign
+    while ((value = amounts.splice(0, 1)[0])) {
+      const deleted = await (message.channel as TextChannel).bulkDelete(
+        value,
+        true
+      );
+      messages.push(deleted);
+      if (value > deleted.size) {
+        amounts.length = 0;
       }
     }
+    const size = messages.length;
+    embed.setDescription(
+      `Approximately ${
+        size * 99
+      } Messages are Purged. \nThis number may not be accurate.`
+    );
+    message.channel.send({
+      embeds: [embed],
+    });
   }
 }
 export default PurgeCommand;
