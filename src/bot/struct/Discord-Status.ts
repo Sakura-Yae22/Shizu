@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import {
-  DiscordStatuslogs,
-  DiscordStatuslogs as GuildModel,
-} from "../mongoose/schemas/discord-status";
+import { guild as GuildModel } from "../mongoose/schemas/guild";
 import Bot from "../client/Client";
 import {
   StatuspageUpdates,
@@ -47,18 +44,32 @@ export default async function (client: Bot) {
     for (const result of results) {
       const guild = await client.guilds.cache.get(`${BigInt(result.guildId)}`);
       if (!guild) {
-        GuildModel.findOneAndRemove({
-          guildId: result.guildId,
-        });
+        GuildModel.findOneAndUpdate(
+          {
+            guildId: result.guildId,
+          },
+          {
+            $unset: {
+              statusChannelId: "",
+            },
+          }
+        );
         continue;
       }
-      const channel = (await guild.channels.cache.get(
-        `${BigInt(result.channelId)}`
-      )) as TextChannel;
+      const channel = guild.channels.cache.get(
+        `${BigInt(result.statusChannelId)}`
+      ) as TextChannel;
       if (!channel) {
-        await GuildModel.findOneAndRemove({
-          channelId: result.channelId,
-        });
+        await GuildModel.findOneAndUpdate(
+          {
+            guildId: result.guildId,
+          },
+          {
+            $unset: {
+              statusChannelId: "",
+            },
+          }
+        );
       }
       const hook = await webhook(channel, guild, client);
       if (!hook) continue;
@@ -146,9 +157,16 @@ async function webhook(
   const arr: Webhook[] = [];
   let check = false;
   if (!channel.permissionsFor(guild?.me!).has("MANAGE_WEBHOOKS")) {
-    await DiscordStatuslogs.findOneAndRemove({
-      guildId: guild.id,
-    });
+    await GuildModel.findOneAndUpdate(
+      {
+        guildId: guild.id,
+      },
+      {
+        $unset: {
+          statusChannelId: "",
+        },
+      }
+    );
     const owner = await guild.fetchOwner();
     await owner
       .send(
@@ -168,15 +186,22 @@ async function webhook(
   if (!arr[0]) {
     if (webhook.size !== 10) {
       const web = await channel
-        .createWebhook("Akio Logger", {
+        .createWebhook("Shizu Logger", {
           avatar: `${client.user.displayAvatarURL()}`,
           reason: `Mod Logs`,
         })
         .catch(async () => {
           check = true;
-          await DiscordStatuslogs.findOneAndRemove({
-            guildId: guild.id,
-          });
+          await GuildModel.findOneAndUpdate(
+            {
+              guildId: guild.id,
+            },
+            {
+              $unset: {
+                statusChannelId: "",
+              },
+            }
+          );
           const owner = await guild.fetchOwner();
           await owner
             .send(

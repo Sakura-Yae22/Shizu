@@ -6,6 +6,7 @@ import {
   MessageActionRow,
   MessageButton,
   MessageComponentInteraction,
+  ButtonInteraction,
 } from "discord.js";
 
 abstract class BanCommand extends Command {
@@ -83,11 +84,19 @@ abstract class BanCommand extends Command {
       },
       components: [row],
     });
-
-    const filter = (interaction) =>
-      interaction.customId === "yes_ban" ||
-      (interaction.customId === "no_ban" &&
-        interaction.user.id === message.author.id);
+    const filter = (interaction: ButtonInteraction) => {
+      if (
+        (interaction.customId === "yes_ban" ||
+          interaction.customId === "no_ban") &&
+        interaction.user.id !== message.author.id
+      ) {
+        interaction.reply({
+          content: `You cant use this. If you are a mod, Please use the command by youself.`,
+          ephemeral: true,
+        });
+        return false;
+      } else return true;
+    };
 
     const collector = mes.createMessageComponentCollector({
       filter,

@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from "../../struct/Command";
 import { Message } from "discord.js";
-import { prefix as prefixes } from "../../mongoose/schemas/prefix";
+import { guild as schema } from "../../mongoose/schemas/guild";
 
 abstract class PrefixCommand extends Command {
   constructor() {
@@ -33,16 +33,14 @@ abstract class PrefixCommand extends Command {
         content: `Prefix is too long, Pls make sure it is smaller than 20`,
       });
 
-    await prefixes.findOneAndUpdate(
+    await schema.findOneAndUpdate(
       {
-        gId: message.guild?.id as string,
+        guildId: message.guild?.id,
       },
       {
-        gId: message.guild?.id as string,
-        prefix: prefixess,
-      },
-      {
-        upsert: true,
+        $set: {
+          prefix: prefixess,
+        },
       }
     );
 

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 
-import { muteRole as muterolschema } from "../mongoose/schemas/muterole";
+import { guild as schema } from "../mongoose/schemas/guild";
 import { mute_Schema as muted } from "../mongoose/schemas/mute";
 import {
   MessageEmbed,
@@ -11,13 +11,11 @@ import {
   TextChannel,
   Snowflake,
   Collection,
+  Role,
 } from "discord.js";
 import { Schedule_Schema as scheduledSchema } from "../mongoose/schemas/schedule";
 import Bot from "../client/Client";
-import { prefix as prefixes } from "../mongoose/schemas/prefix";
-import { modlogs } from "../mongoose/schemas/modlogs";
 import { Status_cache } from "./Discord-Status";
-import { Suggest } from "../mongoose/schemas/suggest";
 
 export class Cache {
   prefixcache = new Collection<string, string>();
@@ -30,17 +28,13 @@ export class Cache {
     //Object.defineProperty(client, "this", Bot);
   }
   async loadData() {
-    const prefix = await prefixes.find();
-    const modchan = await modlogs.find();
-    const suggestchan = await Suggest.find();
-    for (const result of prefix) {
-      this.prefixcache.set(result.gId, result.prefix);
-    }
-    for (const result of modchan) {
-      this.modlogscache.set(result.guildId, result.channelId);
-    }
-    for (const result of suggestchan) {
-      this.suggestcache.set(result.guildId, result.channelId);
+    const data = await schema.find({});
+    for (const res of data) {
+      if (res.prefix) this.prefixcache.set(res.guildId, res.prefix);
+      if (res.modlogChannelId)
+        this.modlogscache.set(res.guildId, res.modLogsChannelId);
+      if (res.suggestChannelId)
+        this.suggestcache.set(res.guildId, res.suggestChannelId);
     }
   }
 
@@ -98,31 +92,37 @@ export class Cache {
     }
   }
 
-  async muterole(guild: Guild) {
-    let mutedrole: any = "";
-    const custommuterole = await muterolschema.findOne({
+  async muterole(guild: Guild): Promise<Role | undefined> {
+    let mutedrole: Role | undefined;
+    const custommuterole = await schema.findOne({
       guildId: guild.id,
+      muteRoleId: { $exists: true },
     });
-    const uhhh = await guild.roles.cache.find((r) => {
+    const uhhh = guild.roles.cache.find((r) => {
       return r.name === "Muted";
     });
-    if (!uhhh) {
-      mutedrole = null;
-    }
     if (custommuterole) {
-      const mt = await guild.roles.cache.find((r) => {
-        return r.id === custommuterole?.muteRole;
+      const mt = guild.roles.cache.find((r) => {
+        return r.id === custommuterole?.muteRoleId;
       });
       if (!mt) {
-        await muterolschema.findOneAndRemove({
-          guildId: guild.id,
-        });
+        await schema.findOneAndUpdate(
+          {
+            guildId: guild.id,
+            muteRoleId: { $exists: true },
+          },
+          {
+            $unset: {
+              muteRoleId: "",
+            },
+          }
+        );
       }
       mutedrole = mt;
     } else if (!custommuterole) mutedrole = uhhh;
     return mutedrole;
   }
-  async checkPosts(client: Bot) {
+  async checkPosts(client: Bot): Promise<void> {
     const query = {
       date: {
         $lte: Date.now(),
@@ -157,7 +157,7 @@ export class Cache {
     }
     await scheduledSchema.deleteMany(query);
   }
-  check(client: Bot) {
+  check(client: Bot): void {
     this.checkPosts(client);
     this.MuteCheck(client);
   }

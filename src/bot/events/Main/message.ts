@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Event from "../../struct/Event";
+// import { guild } from "../../mongoose/schemas/guild";
 import {
   Message,
   TextChannel,
@@ -19,6 +20,9 @@ abstract class MessageEvent extends Event {
 
   public async exec(message: Message): Promise<void> {
     const embed = new MessageEmbed().setColor("RED");
+    // await new guild({
+    //   guildId: message.guild?.id,
+    // }).save();
     // const prefix = message.guild ? getPrefix(message.guild.id) ? getPrefix(message.guild.id) : this.client.defaultprefix : this.client.defaultprefix
     let prefix = message.guild
       ? this.client.cache.getPrefix(message.guild.id)

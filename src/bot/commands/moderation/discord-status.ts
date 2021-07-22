@@ -9,7 +9,7 @@ import {
   TextChannel,
   VoiceChannel,
 } from "discord.js";
-import { DiscordStatuslogs as schema } from "../../mongoose/schemas/discord-status";
+import { guild as schema } from "../../mongoose/schemas/guild";
 
 abstract class setDiscordStatusCommand extends Command {
   constructor() {
@@ -32,11 +32,12 @@ abstract class setDiscordStatusCommand extends Command {
     // console.log(message)
     const Data = await schema.findOne({
       guildId: message.guild?.id,
+      statusChannelId: { $exists: true },
     });
     if (!Data) {
       const cid =
         message.mentions.channels.first() ??
-        (await message.guild?.channels.cache.get(`${BigInt(args[0])}`));
+        message.guild?.channels.cache.get(`${BigInt(args[0])}`);
       if (!cid) {
         return message.reply(
           `Could\\'nt find a channel! Please provide a valid Id`
@@ -57,10 +58,17 @@ abstract class setDiscordStatusCommand extends Command {
           `This is not a valid channel, This is is a Stage Channel Tagged\nMake sure this this is a text channel`
         );
       }
-      await new schema({
-        guildId: message.guild?.id,
-        channelId: cid.id,
-      }).save();
+
+      await schema.findOneAndUpdate(
+        {
+          guildId: message.guild?.id,
+        },
+        {
+          $set: {
+            statusChannelId: cid.id,
+          },
+        }
+      );
       if (cid instanceof TextChannel)
         await cid.createWebhook("Shizu Discord Status", {
           avatar:
@@ -71,9 +79,16 @@ abstract class setDiscordStatusCommand extends Command {
         content: `Status Logs channel set to ${cid}`,
       });
     } else {
-      await schema.findOneAndRemove({
-        guildId: message.guild?.id,
-      });
+      await schema.findOneAndUpdate(
+        {
+          guildId: message.guild?.id,
+        },
+        {
+          $unset: {
+            statusChannelId: "",
+          },
+        }
+      );
       await message.channel.send({
         content: `**Successfuly Reset the Discord Logs System on your Server!**\npls use this command again to re-setup!`,
       });

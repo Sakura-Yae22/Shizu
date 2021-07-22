@@ -44,10 +44,10 @@ abstract class BotInfoCommand extends Command {
         "**General**",
         `
 										** Client:** ${this.client.user?.tag},
-										** Servers Cached:** ${this.client.guilds.cache.size},
+							** Servers Cached:** ${this.client.guilds.cache.size},
 										** Users Cached:** ${this.client.users.cache.size},
 										** Channels Cached:** ${this.client.channels.cache.size},
-										** BirthDay: ** <t:${Math.round(this.client.user?.createdTimestamp / 1000)}:f>,
+										** Birthday: ** <t:${Math.round(this.client.user?.createdTimestamp / 1000)}:f>,
 										** Node.js:** ${process.version},
 										** Bot Version:** v${version},
 										** Discord.js:** v${djsversion},

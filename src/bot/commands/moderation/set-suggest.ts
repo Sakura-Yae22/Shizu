@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Suggest as schema, ISuggest } from "../../mongoose/schemas/suggest";
+import { guild as schema } from "../../mongoose/schemas/guild";
 import Command from "../../struct/Command";
 import { Message, Channel, TextChannel } from "discord.js";
 
@@ -26,8 +26,9 @@ abstract class SuggestChannelCommand extends Command {
 
   // tslint:disable-next-line: promise-function-async
   public async exec(message: Message, args: string[]) {
-    const Data: ISuggest | null = await schema.findOne({
+    const Data = await schema.findOne({
       guildId: message.guild?.id,
+      suggestChannelId: { $exists: true },
     });
     if (!Data) {
       const cid: Channel | undefined =
@@ -37,10 +38,16 @@ abstract class SuggestChannelCommand extends Command {
         return message.reply({
           content: `Could\\'nt find a vaild text channel! Please provide a valid Id`,
         });
-      await new schema({
-        guildId: message.guild?.id,
-        channelId: cid.id,
-      }).save();
+      await schema.findOneAndUpdate(
+        {
+          guildId: message.guild?.id,
+        },
+        {
+          $set: {
+            suggestChannelId: cid.id,
+          },
+        }
+      );
       this.client.cache.suggestcache.set(`${message.guild?.id}`, cid.id);
       message.reply({
         content: `Suggestions channel set to ${cid}\nTo approve/deny suggestions, please use the slash command \`suggest\` with one of the following options \`accept\` \`deny\``,
@@ -54,9 +61,16 @@ abstract class SuggestChannelCommand extends Command {
         ],
       });
     } else {
-      await schema.findOneAndRemove({
-        guildId: message.guild?.id,
-      });
+      await schema.findOneAndUpdate(
+        {
+          guildId: message.guild?.id,
+        },
+        {
+          $unset: {
+            suggestChannelId: "",
+          },
+        }
+      );
       this.client.cache.suggestcache.delete(`${message.guild?.id}`);
       message.channel.send({
         content: `**Successfuly Reset the Suggestion System on your Server!**\npls use this command again to re-setup!`,

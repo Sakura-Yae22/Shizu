@@ -13,8 +13,6 @@ abstract class InteractionEvent extends Event {
   public async exec(interaction: Interaction) {
     if (interaction.isCommand()) {
       const command = this.client.interactions.get(interaction.commandName);
-      const arr: any[] = [];
-      await interaction.options.forEach((options) => arr.push(options));
       if (command?.cooldown) {
         if (!this.client.cooldowns.has(command.name)) {
           this.client.cooldowns.set(command.name, new Collection());
@@ -46,7 +44,7 @@ abstract class InteractionEvent extends Event {
         );
       }
       if (command?.exec.constructor.name === "AsyncFunction") {
-        command.exec(interaction, arr).catch((err) => {
+        command.exec(interaction, interaction.options).catch((err) => {
           const errEmbed = new MessageEmbed()
             .setColor("RED")
             .setDescription(err.message)
@@ -60,7 +58,7 @@ abstract class InteractionEvent extends Event {
         return;
       } else {
         try {
-          command?.exec(interaction, arr);
+          command?.exec(interaction, interaction.options);
           return;
         } catch (err: any) {
           const errEmbed = new MessageEmbed()

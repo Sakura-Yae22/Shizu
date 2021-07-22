@@ -70,7 +70,6 @@ abstract class ServerCommand extends Command {
     const roles: any = message.guild?.roles.cache
       .sort((a, b) => b.position - a.position)
       .map((role) => role.toString());
-    const members = message.guild?.members.cache;
     const channels = message.guild?.channels.cache;
     const emojis = message.guild?.emojis.cache;
     const owner = await message.guild?.fetchOwner();
@@ -118,8 +117,6 @@ abstract class ServerCommand extends Command {
                       emojis?.filter((emoji) => emoji.animated ?? false).size
                     }
 										**❯ Member Count:** ${message.guild.memberCount}
-										**❯ Humans:** ${members?.filter((member) => !member.user.bot).size}
-										**❯ Bots:** ${members?.filter((member) => member.user.bot).size}
 										**❯ Text Channels:** ${
                       channels?.filter(
                         (channel) => channel.type === "GUILD_TEXT"
@@ -135,42 +132,6 @@ abstract class ServerCommand extends Command {
         )
         .setTimestamp();
       const embed3 = new MessageEmbed()
-        .setDescription(`**Precence info for __${message.guild.name}__**`)
-        .setColor("RANDOM")
-        .setThumbnail(
-          message.guild.iconURL({
-            dynamic: true,
-          })!
-        )
-        .setTimestamp()
-        .addField(
-          "Presence",
-          String(`
-												**❯ Online:** ${
-                          members?.filter(
-                            (member) => member.presence?.status === "online"
-                          ).size
-                        }
-												**❯ Idle:** ${
-                          members?.filter(
-                            (member) => member.presence?.status === "idle"
-                          ).size
-                        }
-												**❯ Do Not Disturb:** ${
-                          members?.filter(
-                            (member) => member.presence?.status === "dnd"
-                          ).size
-                        }
-												**❯ Offline:** ${
-                          members?.filter(
-                            (member) => member.presence?.status === "offline"
-                          ).size
-                        }
-										`),
-          true
-        );
-
-      const embed4 = new MessageEmbed()
         .setDescription(`**Role information for __${message.guild.name}__**`)
         .setColor("RANDOM")
         .setThumbnail(
@@ -189,7 +150,7 @@ abstract class ServerCommand extends Command {
           )
         )
         .setTimestamp();
-      const arrr = [embed, embed2, embed3, embed4];
+      const arrr = [embed, embed2, embed3];
       // const embeds = new Paginate(arrr, message, {
       //   appendPageInfo: true,
       //   timeout: 60000,

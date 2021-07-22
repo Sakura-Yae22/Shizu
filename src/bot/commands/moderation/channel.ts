@@ -11,6 +11,7 @@ import {
   MessageComponentInteraction,
   GuildChannel,
   Snowflake,
+  ButtonInteraction,
 } from "discord.js";
 
 abstract class ChannelCommand extends Command {
@@ -33,10 +34,19 @@ abstract class ChannelCommand extends Command {
 
   // tslint:disable-next-line: promise-function-async
   public async exec(message: Message, args: string[], prefix: string) {
-    const filter = (interaction) =>
-      interaction.customId === "yesc" ||
-      (interaction.customId === "noc" &&
-        interaction.user.id === message.author.id);
+    const filter = (interaction: ButtonInteraction) => {
+      if (
+        (interaction.customId === "yes_ban" ||
+          interaction.customId === "no_ban") &&
+        interaction.user.id !== message.author.id
+      ) {
+        interaction.reply({
+          content: `You cant use this. If you are a mod, Please use the command by youself.`,
+          ephemeral: true,
+        });
+        return false;
+      } else return true;
+    };
     if (args[1] === message.channel.id)
       return message.reply({
         content: `Pls use this command in another channel`,

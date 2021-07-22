@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+  CommandInteraction,
+  CommandInteractionOptionResolver,
+  MessageEmbed,
+} from "discord.js";
 import Interaction from "../../struct/Interaction";
 import fetch from "node-fetch";
 
@@ -22,11 +26,15 @@ abstract class NpmInteraction extends Interaction {
     });
   }
 
-  public async exec(interaction: CommandInteraction, args: any[]) {
+  public async exec(
+    interaction: CommandInteraction,
+    args: CommandInteractionOptionResolver
+  ) {
     let response;
-    response = await fetch(
-      `https://api.npms.io/v2/search?q=${args[0].value}`
-    ).then((res) => res.json()); // Search the package
+    const search = args.getString("package-name") as string;
+    response = await fetch(`https://api.npms.io/v2/search?q=${search}`).then(
+      (res) => res.json()
+    ); // Search the package
     const pkg = response.results[0].package;
     const alpha = pkg.author ? pkg.author.name : "None";
     const npme = new MessageEmbed()

@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from "../../struct/Command";
 import { Message, TextChannel } from "discord.js";
-import { modlogs as schema } from "../../mongoose/schemas/modlogs";
+import { guild as schema } from "../../mongoose/schemas/guild";
 
 abstract class ModLogsCommand extends Command {
   constructor() {
@@ -26,6 +26,7 @@ abstract class ModLogsCommand extends Command {
   public async exec(message: Message, args: string[]) {
     const Data = await schema.findOne({
       guildId: String(message.guild?.id),
+      modLogsChannelId: { $exists: true },
     });
     if (!Data) {
       const cid =
@@ -41,10 +42,16 @@ abstract class ModLogsCommand extends Command {
           `This is not a valid channel tagged, Make sure this this is a text channel`
         );
       }
-      await new schema({
-        guildId: String(message.guild?.id),
-        channelId: cid.id,
-      }).save();
+      await schema.findOneAndUpdate(
+        {
+          guildId: message.guild?.id,
+        },
+        {
+          $set: {
+            modLogsChannelId: cid.id,
+          },
+        }
+      );
       this.client.cache.modlogscache.set(`${message.guild?.id}`, cid.id);
       if (cid instanceof TextChannel)
         await cid.createWebhook("Shizu Logger", {
@@ -55,9 +62,16 @@ abstract class ModLogsCommand extends Command {
         content: `Mod Logs channel set to ${cid}`,
       });
     } else {
-      await schema.findOneAndRemove({
-        guildId: String(message.guild?.id),
-      });
+      await schema.findOneAndUpdate(
+        {
+          guildId: String(message.guild?.id),
+        },
+        {
+          $unset: {
+            modLogsChannelId: "",
+          },
+        }
+      );
       this.client.cache.modlogscache.delete(`${message.guild?.id}`);
       message.channel.send({
         content: `**Successfuly Reset the Mod Logs System on your Server!**\npls use this command again to re-setup!`,

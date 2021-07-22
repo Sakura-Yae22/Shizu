@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Suggest as schema } from "../../mongoose/schemas/suggest";
+import { guild as schema } from "../../mongoose/schemas/guild";
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   ColorResolvable,
   CommandInteraction,
+  CommandInteractionOptionResolver,
   GuildMember,
   MessageEmbed,
   Snowflake,
@@ -62,7 +63,11 @@ abstract class SuggestInteraction extends Interaction {
     });
   }
 
-  public async exec(interaction: CommandInteraction, args: any[]) {
+  public async exec(
+    interaction: CommandInteraction,
+    args: CommandInteractionOptionResolver
+  ) {
+    console.log(args);
     if (!interaction.guild)
       return interaction.reply("Please use it in your guild");
     const reason = String(args[0].value);
@@ -342,11 +347,19 @@ abstract class SuggestInteraction extends Interaction {
           });
         }
       } else if (!channel) {
-        schema.findOneAndRemove({
-          guildId: interaction.guild.id,
-        });
+        schema.findOneAndUpdate(
+          {
+            guildId: interaction.guild.id,
+          },
+          {
+            $unset: {
+              suggestChannelId: "",
+            },
+          }
+        );
         await interaction.reply({
-          content: "I couldn't find a channel which was registered",
+          content:
+            "I couldn't find a channel which was registered and hence i have removed The data from the database",
           ephemeral: false,
         });
       }

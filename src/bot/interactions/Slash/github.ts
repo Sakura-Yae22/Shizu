@@ -41,10 +41,12 @@ abstract class GithubInteraction extends Interaction {
   }
 
   public async exec(interaction: CommandInteraction, args: any) {
-    switch (args[0].value) {
+    const repooruser = args.getString("repo_or_user") as string;
+    const target = args.getString("target_name") as string;
+    switch (repooruser) {
       case "user":
         let git: any;
-        git = await fetch(`https://api.github.com/users/${args[1].value}`).then(
+        git = await fetch(`https://api.github.com/users/${target}`).then(
           (res) => res.json()
         );
         if (git.message) {
@@ -91,7 +93,7 @@ abstract class GithubInteraction extends Interaction {
         break;
       case "repo":
         const rep: any = await fetch(
-          `https://api.github.com/search/repositories?q=${args[1].value}`
+          `https://api.github.com/search/repositories?q=${target}`
         ).then((res) => res.json());
         if (rep.message) {
           interaction.editReply(

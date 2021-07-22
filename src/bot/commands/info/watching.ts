@@ -107,7 +107,7 @@ abstract class WatchingCommand extends Command {
     });
     if (descriptions.length === 1) {
       return message.channel.send({
-        content: `${String(descriptions[0])}`,
+        embeds: [descriptions[0]],
       });
     }
     const channel = message.guild?.channels.cache.get(listings.channelId);

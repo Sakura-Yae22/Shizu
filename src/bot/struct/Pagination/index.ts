@@ -1,4 +1,12 @@
-import { DMChannel, Message, MessageEmbed, TextChannel } from "discord.js";
+import {
+  DMChannel,
+  Interaction,
+  Message,
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
+  TextChannel,
+} from "discord.js";
 import { ButtonOption } from "./types/ButtonOption";
 
 //const availableEmojis = ["⏮️", "◀️", "⏹️", "▶️", "⏭️"];
@@ -14,6 +22,7 @@ class Pagination {
   private readonly channel: TextChannel | DMChannel;
   private readonly pages: MessageEmbed[];
   private index = 0;
+  private deleted = false;
   timeout: number | undefined;
   rmsg: Message;
 
@@ -47,44 +56,23 @@ class Pagination {
   async paginate(): Promise<void> {
     this.message = await this.channel.send({
       embeds: [this.pages[this.index]],
-      components: [
-        {
-          type: 1,
-          components: [
-            {
-              type: "BUTTON",
-              style: "PRIMARY",
-              //label: "Next",
-              emoji: "<:left:865603838290690058>",
-              customId: "<:left:865603838290690058>",
-            },
-            {
-              type: "BUTTON",
-              style: "DANGER",
-              // label: "Stop",
-              emoji: "<:pause:865604031849562132>",
-              customId: "<:pause:865604031849562132>",
-            },
-            {
-              type: "BUTTON",
-              style: "PRIMARY",
-              emoji: "<:right:865603935234293770>",
-              customId: "<:right:865603935234293770>",
-            },
-            {
-              type: "BUTTON",
-              style: "PRIMARY",
-              emoji: "<:delete:865604123574927370>",
-              customId: "<:delete:865604123574927370>",
-            },
-          ],
-        },
-      ],
+      components: [this.buttons(false)],
     });
     if (this.pages.length < 2) {
       return;
     }
-    const filter = (interaction) => interaction.user.id === this.rmsg.author.id;
+    const filter = (interaction: Interaction) => {
+      if (
+        interaction.user.id !== this.rmsg.author.id &&
+        interaction.isMessageComponent()
+      ) {
+        interaction.reply({
+          content: `You cant use the pagination on this embed.\nPlease use the command \`${this.rmsg.content}\` to get your own embed.`,
+          ephemeral: true,
+        });
+        return false;
+      } else return true;
+    };
     const interactionCollector = this.message.createMessageComponentCollector({
       filter,
       idle: 1000 * 60,
@@ -104,45 +92,10 @@ class Pagination {
           break;
         case availableEmojis[1]:
           // Stop
+          this.deleted = true;
           interactionCollector.stop("stopped by user");
           await interaction.update({
-            components: [
-              {
-                type: 1,
-                components: [
-                  {
-                    type: "BUTTON",
-                    style: "PRIMARY",
-                    disabled: true,
-                    //label: "Next",
-                    emoji: "<:left:865603838290690058>",
-                    customId: "<:left:865603838290690058>",
-                  },
-                  {
-                    type: "BUTTON",
-                    style: "DANGER",
-                    disabled: true,
-                    // label: "Stop",
-                    emoji: "<:pause:865604031849562132>",
-                    customId: "<:pause:865604031849562132>",
-                  },
-                  {
-                    type: "BUTTON",
-                    style: "PRIMARY",
-                    disabled: true,
-                    emoji: "<:right:865603935234293770>",
-                    customId: "<:right:865603935234293770>",
-                  },
-                  {
-                    type: "BUTTON",
-                    style: "PRIMARY",
-                    disabled: true,
-                    emoji: "<:delete:865604123574927370>",
-                    customId: "<:delete:865604123574927370>",
-                  },
-                ],
-              },
-            ],
+            components: [this.buttons(true)],
           });
           break;
         case availableEmojis[2]:
@@ -156,6 +109,7 @@ class Pagination {
           });
           break;
         case availableEmojis[3]:
+          this.deleted = true;
           this.message?.edit({
             embeds: [],
             content: `Deleted the embed from continuing further\nCommand used \`${this.rmsg.content}\` by ${this.rmsg.author}`,
@@ -165,46 +119,36 @@ class Pagination {
       }
     });
     interactionCollector.on("end", async () => {
+      if (this.deleted) return;
       await this?.message?.edit({
-        components: [
-          {
-            type: 1,
-            components: [
-              {
-                type: "BUTTON",
-                style: "PRIMARY",
-                disabled: true,
-                //label: "Next",
-                emoji: "<:left:865603838290690058>",
-                customId: "<:left:865603838290690058>",
-              },
-              {
-                type: "BUTTON",
-                style: "DANGER",
-                disabled: true,
-                // label: "Stop",
-                emoji: "<:pause:865604031849562132>",
-                customId: "<:pause:865604031849562132>",
-              },
-              {
-                type: "BUTTON",
-                style: "PRIMARY",
-                disabled: true,
-                emoji: "<:right:865603935234293770>",
-                customId: "<:right:865603935234293770>",
-              },
-              {
-                type: "BUTTON",
-                style: "PRIMARY",
-                disabled: true,
-                emoji: "<:delete:865604123574927370>",
-                customId: "<:delete:865604123574927370>",
-              },
-            ],
-          },
-        ],
+        components: [this.buttons(true)],
       });
     });
+  }
+
+  buttons(disabled: boolean): MessageActionRow {
+    return new MessageActionRow().addComponents([
+      new MessageButton()
+        .setDisabled(disabled)
+        .setStyle("PRIMARY")
+        .setEmoji("<:left:865603838290690058>")
+        .setCustomId("<:left:865603838290690058>"),
+      new MessageButton()
+        .setDisabled(disabled)
+        .setStyle("DANGER")
+        .setEmoji("<:pause:865604031849562132>")
+        .setCustomId("<:pause:865604031849562132>"),
+      new MessageButton()
+        .setDisabled(disabled)
+        .setStyle("PRIMARY")
+        .setEmoji("<:right:865603935234293770>")
+        .setCustomId("<:right:865603935234293770>"),
+      new MessageButton()
+        .setDisabled(disabled)
+        .setStyle("DANGER")
+        .setEmoji("<:delete:865604123574927370>")
+        .setCustomId("<:delete:865604123574927370>"),
+    ]);
   }
 }
 

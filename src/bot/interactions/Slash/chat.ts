@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+  CommandInteraction,
+  CommandInteractionOptionResolver,
+  MessageEmbed,
+} from "discord.js";
 import Interaction from "../../struct/Interaction";
 import fetch from "node-fetch";
 
@@ -21,14 +25,14 @@ abstract class ChatInteraction extends Interaction {
     });
   }
 
-  public async exec(interaction: CommandInteraction, args: any[]) {
-    const text: string[] = [];
-    args.forEach((arg) => {
-      text.push(arg.value);
-    });
+  public async exec(
+    interaction: CommandInteraction,
+    args: CommandInteractionOptionResolver
+  ) {
+    const text = args.getString("text") as string;
     fetch(
       `https://aria-api.up.railway.app/misc/chat?msg=${encodeURIComponent(
-        text.join(" ")
+        text
       )}&uid=${interaction.user.id}`,
       {
         headers: {

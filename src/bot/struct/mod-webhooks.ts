@@ -1,28 +1,31 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import Bot from "../client/Client";
-import { Guild, TextChannel, User, Webhook } from "discord.js";
-import { modlogs as schema } from "../mongoose/schemas/modlogs";
+import { Guild, GuildMember, TextChannel, User, Webhook } from "discord.js";
+import { guild as schema } from "../mongoose/schemas/guild";
 
-async function log(guild: Guild | any, client: Bot): Promise<void | Webhook> {
+async function log(guild: Guild, client: Bot): Promise<void | Webhook> {
   const data = client.cache.getModChannel(guild.id);
   if (!data) return;
-  const channel = (await guild.channels.cache.get(data)) as TextChannel;
-  const arr: Webhook[] | any[] = [];
-  let check = false;
-  if (!channel.permissionsFor(guild?.me!).has("MANAGE_WEBHOOKS")) {
-    await schema.findOneAndRemove({
-      guildId: guild.id,
-    });
+  const channel = guild.channels.cache.get(`${BigInt(data)}`) as TextChannel;
+  const arr: Webhook[] = [];
+  if (
+    !channel.permissionsFor(guild?.me as GuildMember).has("MANAGE_WEBHOOKS")
+  ) {
+    await schema.findOneAndUpdate(
+      {
+        guildId: guild.id,
+      },
+      {
+        $unset: {
+          modLogsChannelId: "",
+        },
+      }
+    );
     const owner = await guild.fetchOwner();
     await owner.user
       .send({
         content: `I wasnt able to get a webhook from the channel with the id ${data} for the mod Logs\nI have **reset** the Mod Logs\nI dont have Perms for manage webhooks, pls make sure I have that permission`,
       })
-      .catch(() => {
-        return;
-      });
+      .catch(() => null);
     return;
   }
   const webhook = await channel.fetchWebhooks();
@@ -38,26 +41,30 @@ async function log(guild: Guild | any, client: Bot): Promise<void | Webhook> {
           avatar: `${client.user.displayAvatarURL()}`,
           reason: `Mod Logs`,
         })
-        .catch(async () => {
-          check = true;
-          await schema.findOneAndRemove({
+        .catch(() => null);
+      if (!web) {
+        await schema.findOneAndUpdate(
+          {
             guildId: guild.id,
-          });
-          const owner = await guild.fetchOwner();
-          await owner.user
-            .send({
-              content: `I wasnt able to get a webhook from the channel with the id ${data} for the mod logs\nI have **reset** the Mod Logs`,
-            })
-            .catch(() => {
-              return;
-            });
-          return;
-        });
-      if (check) return;
+          },
+          {
+            $unset: {
+              modLogsChannelId: "",
+            },
+          }
+        );
+        const owner = await guild.fetchOwner();
+        await owner.user
+          .send({
+            content: `I wasnt able to get a webhook from the channel with the id ${data} for the mod Logs\nI have **reset** the Mod Logs`,
+          })
+          .catch(() => null);
+        return;
+      }
       arr[0] = web;
     } else {
       const logger = webhook.first();
-      arr[0] = logger;
+      arr[0] = logger as Webhook;
     }
   }
   return arr[0];

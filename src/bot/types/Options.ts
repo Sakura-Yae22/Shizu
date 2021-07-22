@@ -5,6 +5,7 @@ import {
   ApplicationCommandOptionData,
   Interaction,
   ButtonInteraction,
+  CommandInteractionOptionResolver,
 } from "discord.js";
 
 export interface CommandOptions {
@@ -29,8 +30,8 @@ export interface InteractionCommandOptions {
   options?: ApplicationCommandOptionData[] | undefined;
   exec: (
     interactions: Interaction,
-    args: (string | number | boolean | undefined)[]
-  ) => any | Promise<any>;
+    args: CommandInteractionOptionResolver
+  ) => Promise<void>;
 }
 
 export type CommandType = Omit<CommandOptions, "exec">;

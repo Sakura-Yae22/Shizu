@@ -41,14 +41,15 @@ class Bot extends Client {
         Intents.FLAGS.DIRECT_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_INVITES,
-        Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-        Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_MEMBERS,
       ],
       makeCache: Options.cacheWithLimits({
         MessageManager: 200, // This is default.
+        UserManager: 10000,
+        GuildMemberManager: 3000,
         PresenceManager: 0, // Add more class names here.
       }),
-      partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"], // Cache all guild members and users upon startup, as well as upon joining a guild
+      partials: ["USER", "CHANNEL", "GUILD_MEMBER", "MESSAGE", "REACTION"],
       messageCacheLifetime: 700,
       messageSweepInterval: 3000,
     });
