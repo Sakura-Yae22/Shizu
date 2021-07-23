@@ -67,31 +67,20 @@ abstract class SuggestInteraction extends Interaction {
     interaction: CommandInteraction,
     args: CommandInteractionOptionResolver
   ) {
-    console.log(args);
     if (!interaction.guild)
       return interaction.reply("Please use it in your guild");
-    const reason = String(args[0].value);
-    const title = String(
-      args[1] ? (args[1].name === "priority" ? args[1].value : null) : null
-    );
-    const accep = args[1]
-      ? args[1].name === "accept"
-        ? args[1].value
-        : null
-      : null;
-    const den = args[1]
-      ? args[1].name === "deny"
-        ? args[1].value
-        : null
-      : null;
+    const reason = args.getString("reason") as string;
+    const title = args.getString("priority") ?? String(null);
+    const accept = args.getString("accept") ?? String(null);
+    const deny = args.getString("deny") ?? String(null);
 
-    if (title === "null" && !accep && !den)
+    if (title === "null" && !accept && !deny)
       return interaction.reply({
         content:
           "You didn't specify whether to deny/accept or u have to specify a priority",
       });
-    const accept = String(accep);
-    const deny = String(den);
+    // const accept = String(accep);
+    // const deny = String(den);
     if (title !== "null" && title.length >= 200)
       return interaction.reply({
         content: "Too Big of a Priority, Make sure it is lower than 200",
@@ -161,13 +150,11 @@ abstract class SuggestInteraction extends Interaction {
               ephemeral: true,
             });
           const oldEmbed = tmsg.embeds[0];
-
           if (!oldEmbed)
             return interaction.reply({
               content: `No embed found`,
               ephemeral: true,
             });
-
           if (oldEmbed.footer) {
             if (
               oldEmbed.footer.text !==
@@ -249,13 +236,11 @@ abstract class SuggestInteraction extends Interaction {
               ephemeral: true,
             });
           const oldEmbed = tmsg.embeds[0];
-
           if (!oldEmbed)
             return interaction.reply({
               content: `No embed found in the message`,
               ephemeral: true,
             });
-
           if (oldEmbed.footer) {
             if (
               oldEmbed.footer.text !==
@@ -336,10 +321,7 @@ abstract class SuggestInteraction extends Interaction {
             )
             .setFooter(`Want to suggest something? Just type in this channel`)
             .setTimestamp();
-          await channel.send({ embeds: [embed] }).then(async (message) => {
-            message.react("<a:tick_yes:835437429288468521>").then(() => {
-              message.react("<:tick_no:835440115706888195>");
-            });
+          await channel.send({ embeds: [embed] }).then(async () => {
             await interaction.reply({
               content: "Done I have Sent the message",
               ephemeral: true,

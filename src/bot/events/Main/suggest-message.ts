@@ -6,6 +6,8 @@ import Event from "../../struct/Event";
 import {
   ColorResolvable,
   Message,
+  MessageActionRow,
+  MessageButton,
   MessageEmbed,
   TextChannel,
 } from "discord.js";
@@ -25,6 +27,11 @@ const status = {
     color: "RED",
   },
 };
+
+const row = new MessageActionRow().addComponents([
+  new MessageButton().setCustomId("suggest_accept").setStyle("SUCCESS"),
+]);
+
 abstract class MessageEvent extends Event {
   constructor() {
     super({

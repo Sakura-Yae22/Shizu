@@ -72,9 +72,9 @@ abstract class EvalCommand extends Command {
 					`,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       return message.channel.send({
-      	content: stripIndents`
+        content: stripIndents`
       	${err.message}
       	`,
       });

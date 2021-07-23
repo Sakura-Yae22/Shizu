@@ -46,10 +46,13 @@ abstract class ModsInteraction extends Button {
   }
 
   public async exec(interaction: ButtonInteraction) {
-    const embed = new MessageEmbed()
-      .setFooter(
+    const embed = new MessageEmbed();
+    if (interaction.channel?.type !== "DM") {
+      embed.setFooter(
         `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
-      )
+      );
+    }
+    embed
       .setColor("RANDOM")
       .setTitle(`${this.client.user?.username}\\'s Help Menu`)
       .setAuthor(

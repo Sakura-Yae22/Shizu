@@ -75,7 +75,7 @@ abstract class SteamCommand extends Command {
       current === original ? current : `~~~${original}~~~ ${current}`;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const platforms = Object.entries(data.platforms)
-      .filter(([_platform, has]) => has)
+      .filter(([, has]) => has)
       .map(([platform]) => {
         return {
           name: "\u200b",
@@ -133,14 +133,14 @@ abstract class SteamCommand extends Command {
               name: "\u200b",
               value: truncate(
                 decode(data.detailed_description.replace(/(<([^>]+)>)/gi, " ")),
-                980
+                1000
               ),
             },
             {
               name: "Supported Languages",
               value: `\u2000${truncate(
                 html2md(data.supported_languages),
-                997
+                1000
               )}`,
             },
             ...platforms,

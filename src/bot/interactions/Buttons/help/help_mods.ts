@@ -46,10 +46,18 @@ abstract class ModsInteraction extends Button {
   }
 
   public async exec(interaction: ButtonInteraction) {
-    const embed = new MessageEmbed()
-      .setFooter(
-        `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
-      )
+    const embed = new MessageEmbed();
+    if (interaction.channel?.type !== "DM") {
+      embed
+        .addField(
+          "Info",
+          "Any command starting with `set` works on a if-exist basis. If data exists, it will be erased, if not, a new data will be set"
+        )
+        .setFooter(
+          `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
+        );
+    }
+    embed
       .setColor("RANDOM")
       .setTitle(`${this.client.user?.username}\\'s Help Menu`)
       .setAuthor(

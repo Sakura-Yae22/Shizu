@@ -47,15 +47,17 @@ abstract class HelpCommand extends Command {
 
   public async exec(message: Message, args: string[], prefix: string) {
     const command = this.client.commands.get(args[0]);
-    const embed = new MessageEmbed()
-      .addField(
-        "Info",
-        "Any command starting with `set` works on a if-exist basis. If data exists, it will be erased, if not, a new data will be set"
-      )
-      .setFooter(
-        `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
-      );
-
+    const embed = new MessageEmbed();
+    if (message.channel.type !== "DM") {
+      embed
+        .addField(
+          "Info",
+          "Any command starting with `set` works on a if-exist basis. If data exists, it will be erased, if not, a new data will be set"
+        )
+        .setFooter(
+          `Note: Anyone can click on the buttons and use them. This feature completely Intentional. Dm sh.help to have full control`
+        );
+    }
     // const categories = this.removeDuplicates(
     //   this.client.commands.filter((c) => !c.ownerOnly).map((c) => c.category)
     // );
