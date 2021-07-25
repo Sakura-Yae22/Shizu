@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommandType } from "../types/Options";
 import { Message, PermissionString } from "discord.js";
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 
 abstract class Command {
   public name: string;

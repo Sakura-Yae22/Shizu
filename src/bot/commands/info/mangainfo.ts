@@ -3,7 +3,7 @@
 import Command from "../../struct/Command";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 // import Paginate from "discordjs-paginate";
-import { Pagination } from "../../struct/Pagination";
+import { Pagination } from "../../api/Pagination";
 
 abstract class MangaInfoCommand extends Command {
   constructor() {

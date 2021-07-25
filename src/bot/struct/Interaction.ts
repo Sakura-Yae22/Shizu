@@ -3,7 +3,7 @@ import {
   CommandInteractionOptionResolver,
   Interaction,
 } from "discord.js";
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 import { InteractionType } from "../types/Options";
 
 abstract class InteractionCommand {

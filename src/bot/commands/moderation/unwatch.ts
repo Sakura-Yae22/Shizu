@@ -142,7 +142,7 @@ abstract class UnWatchCommand extends Command {
           fetchedEntries[0].siteUrl
         })`
       );
-      const EMOJI = "<a:tick_yes:835437429288468521>";
+      const EMOJI = "<:tick:868436462021013504>";
       return message.channel.send({
         embeds: [
           new MessageEmbed()

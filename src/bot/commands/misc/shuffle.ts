@@ -24,9 +24,14 @@ abstract class ShuffleCommand extends Command {
   public async exec(message: Message, args: string[]) {
     const text: string = args.join(" ");
     fetch(
-      `https://api.monkedev.com/fun/shuffle?content=${encodeURIComponent(
+      `https://aria-api.up.railway.app/misc/shuffle?content=${encodeURIComponent(
         text
-      )}&key=${process.env.MONKE}`
+      )}`,
+      {
+        headers: {
+          auth: process.env.CHAT as string,
+        },
+      }
     )
       .then((response) => response.json())
       .then((data) => {

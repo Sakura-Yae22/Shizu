@@ -44,7 +44,8 @@ abstract class PrefixCommand extends Command {
       }
     );
 
-    this.client.cache.prefixcache.set(`${message.guild?.id}`, prefixess);
+    const data = this.client.cache.getData(message.guild?.id);
+    if (data) data.prefix = prefixess;
     await message.channel.send({
       content: `Prefix has been updated from ${prefix} to ${prefixess}`,
     });

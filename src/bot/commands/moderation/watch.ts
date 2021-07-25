@@ -199,7 +199,7 @@ abstract class WatchCommand extends Command {
       const EPISODENUM = ordinalize(
         fetchedEntries[0].nextAiringEpisode?.episode
       );
-      const EMOJI = "<a:tick_yes:835437429288468521>";
+      const EMOJI = "<:tick:868436462021013504>";
 
       let description = "";
       if (

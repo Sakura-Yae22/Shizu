@@ -14,7 +14,7 @@ import {
 import { watchList } from "../../mongoose/schemas/GuildWatchList";
 import t from "../../struct/text";
 import * as _ from "lodash";
-import { Pagination } from "../../struct/Pagination";
+import { Pagination } from "../../api/Pagination";
 
 const watch = t(`${process.cwd()}/assets/Watching.graphql`, require);
 

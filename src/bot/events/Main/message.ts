@@ -29,9 +29,7 @@ abstract class MessageEvent extends Event {
       : this.client.defaultprefix;
     if (!prefix) prefix = this.client.defaultprefix;
     if (!message.content.startsWith(prefix)) return;
-    if (message.author.bot) {
-      if (message.author.id !== "843489359869116416") return;
-    }
+    if (message.author.bot) return;
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const commandNam: string | undefined = args.shift();
     const commandName = commandNam;

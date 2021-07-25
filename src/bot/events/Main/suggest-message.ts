@@ -6,8 +6,6 @@ import Event from "../../struct/Event";
 import {
   ColorResolvable,
   Message,
-  MessageActionRow,
-  MessageButton,
   MessageEmbed,
   TextChannel,
 } from "discord.js";
@@ -27,10 +25,6 @@ const status = {
     color: "RED",
   },
 };
-
-const row = new MessageActionRow().addComponents([
-  new MessageButton().setCustomId("suggest_accept").setStyle("SUCCESS"),
-]);
 
 abstract class MessageEvent extends Event {
   constructor() {
@@ -79,8 +73,8 @@ abstract class MessageEvent extends Event {
             })
             .setFooter(`Want to suggest something? Just type in this channel`);
           await channel.send({ embeds: [embed] }).then((message) => {
-            message.react("<a:tick_yes:835437429288468521>").then(() => {
-              message.react("<:tick_no:835440115706888195>");
+            message.react("<:tick:868436462021013504>").then(() => {
+              message.react("<:wrong:868437691765755964>");
             });
           });
           await message.delete();

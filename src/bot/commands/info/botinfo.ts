@@ -15,7 +15,7 @@ import {
 import os from "os";
 const { version } = require(`${process.cwd()}/package.json`);
 // import Paginate from "discordjs-paginate";
-import { Pagination } from "../../struct/Pagination";
+import { Pagination } from "../../api/Pagination";
 
 abstract class BotInfoCommand extends Command {
   constructor() {

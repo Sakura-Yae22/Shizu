@@ -33,11 +33,12 @@
 
 **Shizu** is a stable bot which can be hosted on any os as long as that os has docker installed in it.
 
-
 ## Hosting on your self instance
+
 Create a .env and change the code according to your will
 
-*Note some commands use the api's provided, so it is recomended to get each of them*
+_Note some commands use the api's provided, so it is recomended to get each of them_
+
 ```
 TOKEN=tokenhere
 MONGO_URI=URIHERE
@@ -45,31 +46,37 @@ PREFIX=prefix
 VTOKEN=voidtoken
 TGTOKEN=topggtoken
 FORTTOKEN=fortnitetoken
-MONKE=monkedevapi
 ANIMU=animuapi
 CHAT=(get from exec sh.gen)
 ```
-After filling all of this up, Go ahead to the console and execute the following commands
-```
-docker pull kakarotdev/shizu
 
-docker run -d --env-file ./.env -t kakarotdev/shizu
+After filling all of this up, Go ahead to the console and execute the following commands
+
 ```
+docker pull kakarotdev/shizu:latest-tag-here
+
+docker run -d --env-file ./.env -t kakarotdev/shizu:latest-tag-here
+```
+
 **Note: No help will be given for self Hosting**
 
 ## Docker
+
 Stats for the docker package </a>
-    <a href="https://github.com/aria-development/Shizu">
-<img src="https://github.com/aria-development/Shizu/actions/workflows/docker-publish.yml" />  </a>
+<a href="https://github.com/aria-development/Shizu">
+<img src="https://github.com/aria-development/Shizu/actions/workflows/docker-publish.yml" /> </a>
 
 # Invite The Bot
+
 The offical bot if invited will be a great help
 [Click Here](https://dsc.gg/shizu)
 and Join The Support Server [Here](https://discord.gg/b7HzMtSYtX)
 
 ## Contributing
-[You are able to contribute more features which are listed Here](https://github.com/aria-development/Shizu/projects/1) 
+
+[You are able to contribute more features which are listed Here](https://github.com/aria-development/Shizu/projects/1)
 If you want to contribute something that which is not in The project menu, Please open a issue first. If a Member approves it, It will get added to the project list and you can go ahead and open a pull request
 
 ## License
+
 [Read The File](https://github.com/aria-development/Shizu/blob/main/LICENSE)

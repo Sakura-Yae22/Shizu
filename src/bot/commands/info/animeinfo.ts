@@ -6,7 +6,7 @@ import Command from "../../struct/Command";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import aq from "../../struct/aniquote";
 // import Paginate from "discordjs-paginate";
-import { Pagination } from "../../struct/Pagination";
+import { Pagination } from "../../api/Pagination";
 
 abstract class AnimeInfoCommand extends Command {
   constructor() {

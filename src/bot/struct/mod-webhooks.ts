@@ -1,4 +1,4 @@
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 import { Guild, GuildMember, TextChannel, User, Webhook } from "discord.js";
 import { guild as schema } from "../mongoose/schemas/guild";
 
@@ -8,6 +8,7 @@ async function log(guild: Guild, client: Bot): Promise<void | Webhook> {
   const channel = guild.channels.cache.get(`${BigInt(data)}`) as TextChannel;
   const arr: Webhook[] = [];
   if (
+    !channel ||
     !channel.permissionsFor(guild?.me as GuildMember).has("MANAGE_WEBHOOKS")
   ) {
     await schema.findOneAndUpdate(
@@ -21,6 +22,8 @@ async function log(guild: Guild, client: Bot): Promise<void | Webhook> {
       }
     );
     const owner = await guild.fetchOwner();
+    const data = client.cache.getData(guild.id);
+    if (data) data.modlogChannelId = null;
     await owner.user
       .send({
         content: `I wasnt able to get a webhook from the channel with the id ${data} for the mod Logs\nI have **reset** the Mod Logs\nI dont have Perms for manage webhooks, pls make sure I have that permission`,

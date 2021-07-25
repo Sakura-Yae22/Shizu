@@ -24,11 +24,8 @@ abstract class ModLogsCommand extends Command {
   }
 
   public async exec(message: Message, args: string[]) {
-    const Data = await schema.findOne({
-      guildId: String(message.guild?.id),
-      modLogsChannelId: { $exists: true },
-    });
-    if (!Data) {
+    const data = this.client.cache.getData(message.guild?.id);
+    if (data && !data.modlogChannelId) {
       const cid =
         message.mentions.channels.first() ??
         message.guild?.channels.cache.get(`${BigInt(args[0])}`);
@@ -52,7 +49,7 @@ abstract class ModLogsCommand extends Command {
           },
         }
       );
-      this.client.cache.modlogscache.set(`${message.guild?.id}`, cid.id);
+      data.modlogChannelId = cid.id;
       if (cid instanceof TextChannel)
         await cid.createWebhook("Shizu Logger", {
           avatar: `${this.client.user.displayAvatarURL()}`,
@@ -61,7 +58,7 @@ abstract class ModLogsCommand extends Command {
       message.reply({
         content: `Mod Logs channel set to ${cid}`,
       });
-    } else {
+    } else if (data && data.modlogChannelId) {
       await schema.findOneAndUpdate(
         {
           guildId: String(message.guild?.id),
@@ -72,7 +69,7 @@ abstract class ModLogsCommand extends Command {
           },
         }
       );
-      this.client.cache.modlogscache.delete(`${message.guild?.id}`);
+      data.modlogChannelId = null;
       message.channel.send({
         content: `**Successfuly Reset the Mod Logs System on your Server!**\npls use this command again to re-setup!`,
       });

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 import { guild as GuildModel } from "../mongoose/schemas/guild";
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 import {
   StatuspageUpdates,
   Incident,

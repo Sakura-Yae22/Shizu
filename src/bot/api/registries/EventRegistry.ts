@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/ban-types */
-import Bot from "../../client/Client";
-import Event from "../Event";
+import Bot from "../../api/Client";
+import Event from "../../struct/Event";
 import { sync } from "glob";
 import { resolve } from "path";
 

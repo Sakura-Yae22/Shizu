@@ -24,9 +24,14 @@ abstract class ReverseCommand extends Command {
   public async exec(message: Message, args: string[]) {
     const text = args.join(" ");
     fetch(
-      `https://api.monkedev.com/fun/reverse?content=${encodeURIComponent(
+      `https://aria-api.up.railway.app/misc/reverse?content=${encodeURIComponent(
         text
-      )}&key=${process.env.MONKE}`
+      )}`,
+      {
+        headers: {
+          auth: process.env.CHAT as string,
+        },
+      }
     )
       .then((response) => response.json())
       .then((data) => {

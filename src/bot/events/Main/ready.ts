@@ -4,7 +4,7 @@ import { stripIndents } from "common-tags";
 import {
   InteractionRegistry,
   ButtonRegistry,
-} from "../../struct/registries/export/RegistryIndex";
+} from "../../api/registries/export/RegistryIndex";
 import status from "../../struct/Discord-Status";
 abstract class ReadyEvent extends Event {
   constructor() {

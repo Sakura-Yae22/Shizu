@@ -24,13 +24,9 @@ abstract class SuggestChannelCommand extends Command {
     });
   }
 
-  // tslint:disable-next-line: promise-function-async
   public async exec(message: Message, args: string[]) {
-    const Data = await schema.findOne({
-      guildId: message.guild?.id,
-      suggestChannelId: { $exists: true },
-    });
-    if (!Data) {
+    const data = this.client.cache.getData(message.guild?.id);
+    if (data && !data.suggestChannelId) {
       const cid: Channel | undefined =
         message.mentions.channels.first() ||
         message.guild?.channels.cache.get(`${BigInt(args[0])}`);
@@ -48,7 +44,7 @@ abstract class SuggestChannelCommand extends Command {
           },
         }
       );
-      this.client.cache.suggestcache.set(`${message.guild?.id}`, cid.id);
+      data.suggestChannelId = cid.id;
       message.reply({
         content: `Suggestions channel set to ${cid}\nTo approve/deny suggestions, please use the slash command \`suggest\` with one of the following options \`accept\` \`deny\``,
       });
@@ -60,7 +56,7 @@ abstract class SuggestChannelCommand extends Command {
           },
         ],
       });
-    } else {
+    } else if (data && data.suggestChannelId) {
       await schema.findOneAndUpdate(
         {
           guildId: message.guild?.id,
@@ -71,7 +67,7 @@ abstract class SuggestChannelCommand extends Command {
           },
         }
       );
-      this.client.cache.suggestcache.delete(`${message.guild?.id}`);
+      data.suggestChannelId = null;
       message.channel.send({
         content: `**Successfuly Reset the Suggestion System on your Server!**\npls use this command again to re-setup!`,
       });

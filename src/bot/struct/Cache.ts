@@ -14,40 +14,63 @@ import {
   Role,
 } from "discord.js";
 import { Schedule_Schema as scheduledSchema } from "../mongoose/schemas/schedule";
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 import { Status_cache } from "./Discord-Status";
 
+type obj = {
+  prefix: string | null;
+  modlogChannelId: string | null;
+  suggestChannelId: string | null;
+};
+
 export class Cache {
-  prefixcache = new Collection<string, string>();
-  modlogscache = new Collection<string, string>();
-  suggestcache = new Collection<string, string>();
+  data = new Collection<string, obj>();
   statuscache = Status_cache;
   client: Bot;
   constructor() {
     this.loadData();
-    //Object.defineProperty(client, "this", Bot);
   }
   async loadData() {
     const data = await schema.find({});
+    if (!data) console.log("No data Found");
     for (const res of data) {
-      if (res.prefix) this.prefixcache.set(res.guildId, res.prefix);
-      if (res.modlogChannelId)
-        this.modlogscache.set(res.guildId, res.modLogsChannelId);
-      if (res.suggestChannelId)
-        this.suggestcache.set(res.guildId, res.suggestChannelId);
+      this.data.set(res.guildId, {
+        prefix: res.prefix ? res.prefix : "sh.",
+        modlogChannelId: res.modLogsChannelId ? res.modLogsChannelId : null,
+        suggestChannelId: res.suggestChannelId ? res.suggestChannelId : null,
+      });
+      // if (res.prefix) this.prefixcache.set(res.guildId, res.prefix);
+      // if (res.modlogChannelId)
+      //   this.modlogscache.set(res.guildId, res.modLogsChannelId);
+      // if (res.suggestChannelId)
+      //   this.suggestcache.set(res.guildId, res.suggestChannelId);
     }
   }
 
-  getModChannel(guildId: Snowflake) {
-    return this.modlogscache.get(guildId);
-  }
-  getPrefix(guildId: Snowflake) {
-    return this.prefixcache.get(guildId);
+  getData(guildId: Snowflake | undefined) {
+    if (!guildId) return;
+    return this.data.get(guildId);
   }
 
   getSuggestChannel(guildId: Snowflake) {
-    return this.suggestcache.get(guildId);
+    const data = this.data.get(guildId);
+    if (!data) return null;
+    return data.suggestChannelId;
   }
+
+  getModChannel(guildId: Snowflake) {
+    const data = this.data.get(guildId);
+    if (!data) return null;
+    return data.modlogChannelId;
+  }
+
+  getPrefix(guildId: Snowflake | undefined) {
+    if (!guildId) return;
+    const data = this.data.get(guildId);
+    if (!data) return null;
+    return data.prefix;
+  }
+
   async MuteCheck(client: Bot) {
     const now = new Date();
 

@@ -36,8 +36,7 @@ abstract class ChannelCommand extends Command {
   public async exec(message: Message, args: string[], prefix: string) {
     const filter = (interaction: ButtonInteraction) => {
       if (
-        (interaction.customId === "yes_ban" ||
-          interaction.customId === "no_ban") &&
+        (interaction.customId === "yesc" || interaction.customId === "noc") &&
         interaction.user.id !== message.author.id
       ) {
         interaction.reply({
@@ -54,13 +53,13 @@ abstract class ChannelCommand extends Command {
     const row = new MessageActionRow().addComponents([
       new MessageButton()
         .setCustomId("yesc")
-        .setLabel("Yes, Do it")
+        .setLabel("Yep")
         .setStyle("SUCCESS")
-        .setEmoji("<a:tick_yes:835437429288468521>"),
+        .setEmoji("<:tick:868436462021013504>"),
       new MessageButton()
         .setCustomId("noc")
-        .setEmoji("<:tick_no:835440115706888195>")
-        .setLabel("No!!! Dont")
+        .setEmoji("<:wrong:868437691765755964>")
+        .setLabel("Nope")
         .setStyle("DANGER"),
     ]);
     switch (args[0]) {
@@ -121,8 +120,8 @@ abstract class ChannelCommand extends Command {
               .setDescription(
                 "Please select One of the following buttons with these emojis"
               )
-              .addField("The Yes Emoji", "<a:tick_yes:835437429288468521>")
-              .addField("The No Emoji", "<:tick_no:835440115706888195>");
+              .addField("The Yes Emoji", "<:tick:868436462021013504>")
+              .addField("The No Emoji", "<:wrong:868437691765755964>");
             await mes.edit({
               components: [],
               embeds: [hell],
@@ -202,8 +201,8 @@ abstract class ChannelCommand extends Command {
               .setDescription(
                 "Please select One of the following buttons with these emojis"
               )
-              .addField("The Yes Emoji", "<a:tick_yes:835437429288468521>")
-              .addField("The No Emoji", "<:tick_no:835440115706888195>");
+              .addField("The Yes Emoji", "<:tick:868436462021013504>")
+              .addField("The No Emoji", "<:wrong:868437691765755964>");
             await mes2.edit({
               components: [],
               embeds: [hell],
@@ -294,8 +293,8 @@ abstract class ChannelCommand extends Command {
               .setDescription(
                 "Please select One of the following buttons with these emojis"
               )
-              .addField("The Yes Emoji", "<a:tick_yes:835437429288468521>")
-              .addField("The No Emoji", "<:tick_no:835440115706888195>");
+              .addField("The Yes Emoji", "<:tick:868436462021013504>")
+              .addField("The No Emoji", "<:wrong:868437691765755964>");
 
             await mes3.edit({
               components: [],

@@ -3,7 +3,7 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Bot from "../client/Client";
+import Bot from "../api/Client";
 import { MessageEmbed, Permissions, TextChannel } from "discord.js";
 import _fetch from "node-fetch";
 import { watchList } from "../mongoose/schemas/GuildWatchList";

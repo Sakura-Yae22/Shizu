@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import Command from "../../struct/Command";
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Collection, Message, MessageEmbed, TextChannel } from "discord.js";
 
 abstract class PurgeCommand extends Command {
   constructor() {
@@ -53,10 +53,14 @@ abstract class PurgeCommand extends Command {
 
     // eslint-disable-next-line no-cond-assign
     while ((value = amounts.splice(0, 1)[0])) {
-      const deleted = await (message.channel as TextChannel).bulkDelete(
-        value,
-        true
-      );
+      const deleted: Collection<`${bigint}`, Message> = await (
+        message.channel as TextChannel
+      )
+        .bulkDelete(value, true)
+        .then(
+          (col) =>
+            new Promise((resolve) => setTimeout(() => resolve(col), 1500))
+        );
       messages.push(deleted.size);
       if (value > deleted.size) {
         amounts.length = 0;

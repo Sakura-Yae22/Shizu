@@ -4,7 +4,7 @@ import { Client, Collection, Intents, ClientUser, Options } from "discord.js";
 import {
   CommandRegistry,
   EventRegistry,
-} from "../struct/registries/export/RegistryIndex";
+} from "./registries/export/RegistryIndex";
 import {
   ButtonOptions,
   CommandOptions,
