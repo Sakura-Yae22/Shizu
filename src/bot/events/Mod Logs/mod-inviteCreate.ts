@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Guild, Invite } from "discord.js";
 import Event from "../../struct/Event";
-import { modinvcre } from "../../struct/modEmbeds";
-import { log } from "../../struct/mod-webhooks";
+import { modinvcre } from "../../api/modEmbeds";
+import { log } from "../../api/mod-webhooks";
 
 abstract class ModInviteCreateEvent extends Event {
   constructor() {
