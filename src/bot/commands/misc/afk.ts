@@ -53,10 +53,7 @@ abstract class AFKCommand extends Command {
               ? `${message.author.username}`
               : `${message.member.nickname}`
           }`
-        )
-        .catch(async () => {
-          return;
-        }); // In case bot doesnt have perms
+        ).catch(() => {  }) // In case bot doesnt have perms
 
       return message.channel.send({
         embeds: [
